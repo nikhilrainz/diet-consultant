@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Colorlib Templates">
+    <meta name="author" content="Colorlib">
+    <meta name="keywords" content="Colorlib Templates">
+
+    <!-- Title Page-->
+    <title>Registration Page</title>
+
+    <!-- Icons font CSS-->
+    <link href="vendor1/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+    <link href="vendor1/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <!-- Font special for pages-->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Vendor CSS-->
+    <link href="vendor1/select2/select2.min.css" rel="stylesheet" media="all">
+    <link href="vendor1/datepicker/daterangepicker.css" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="css/main1.css" rel="stylesheet" media="all">
+	
+	<!-- Registration Background Css -->    
+    <link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+
+<body>
+    <div class="limiter"><!-- <div class="page-wrapper bg-gra-02 p-t-130 p-b-100 font-poppins"> -->
+
+		<div class="container-login100" style="background-image: url('images/bg-01.jpg');">
+        <div class="wrapper wrapper--w680">
+
+            <div class="card card-4">
+                <div class="card-body">
+                	
+                    <h2 class="title">Create a new account</h2>
+                    <form method="POST">
+                        <div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">first name</label>
+                                    <input class="input--style-4" type="text" name="first_name">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">last name</label>
+                                    <input class="input--style-4" type="text" name="last_name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Date of Birth</label>
+                                    <div class="input-group-icon">
+                                        <input class="input--style-4 js-datepicker" type="text" name="birthday">
+                                        <i class="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Gender</label>
+                                    <div class="p-t-10">
+                                        <label class="radio-container m-r-45">Male
+                                            <input type="radio" checked="checked" name="gender">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                        <label class="radio-container">Female
+                                            <input type="radio" name="gender">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-space">
+                            <div class="input-group">
+                                    <label class="label">Address</label>
+                                    <input class="input--style-4" type="text" name="Address">        
+                            </div>
+                        
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Phone Number</label>
+                                    <input class="input--style-4" type="text" name="phone">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Qualification</label>
+                                    <!-- <input class="input--style-4" type="text" name="Qualification"> -->
+                                    <select name="Profession" class="input--style-4" >
+                                        <option value="" selected="selected" disabled="disabled">-- select one --</option>
+                                        <option value="No formal education">No formal education</option>
+                                        <option value="Primary education">Primary education</option>
+                                        <option value="Secondary education">Secondary education</option>
+                                        <option value="Vocational qualification">Vocational qualification</option>
+                                        <option value="Bachelor's degree">Bachelor's degree</option>
+                                        <option value="Master's degree">Master's degree</option>
+                                        <option value="Doctorate or higher">Doctorate or higher</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Profession</label>
+                                    <select name="Profession" class="input--style-4" >
+                                        <option value="" selected="selected" disabled="disabled">-- select one --</option>
+                                        <option value = "student">Student</option>
+                                        <option value = "engineer">Engineer</option>
+                                        <option value = "pharmacist">Pharmacist</option>
+                                        <option value = "physician">Physician</option>
+                                        <option value = "accountant">Accountant</option>
+                                        <option value = "lecturer">Lecturer</option>
+                                        <option value = "scientist">Scientist</option>
+                                        <option value = "clerk">Clerk</option>
+                                        <option value = "engineer">Engineer</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Email</label>
+                                    <input class="input--style-4" type="email" name="email">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Password</label>
+                                    <input class="input--style-4" type="Password" name="phone">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-t-15">
+                            <button class="btn btn--radius-2 btn--blue" type="submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+    <!-- Jquery JS-->
+    <script src="vendor1/jquery/jquery.min.js"></script>
+    <!-- Vendor JS-->
+    <script src="vendor1/select2/select2.min.js"></script>
+    <script src="vendor1/datepicker/moment.min.js"></script>
+    <script src="vendor1/datepicker/daterangepicker.js"></script>
+
+    <!-- Main JS-->
+    <script src="js/global1.js"></script>
+
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+
+</html>
+<!-- end document-->

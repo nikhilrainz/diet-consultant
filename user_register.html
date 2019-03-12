@@ -3,6 +3,7 @@
 
 <head>
     <!-- Required meta tags-->
+    {% load staticfiles %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Colorlib Templates">
@@ -13,45 +14,48 @@
     <title>Registration Page</title>
 
     <!-- Icons font CSS-->
-    <link href="vendor1/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
-    <link href="vendor1/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <link href="../static/vendor1/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+    <link href="../static/vendor1/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
     <!-- Font special for pages-->
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Vendor CSS-->
-    <link href="vendor1/select2/select2.min.css" rel="stylesheet" media="all">
-    <link href="vendor1/datepicker/daterangepicker.css" rel="stylesheet" media="all">
+    <link href="../static/vendor1/select2/select2.min.css" rel="stylesheet" media="all">
+    <link href="../static/vendor1/datepicker/daterangepicker.css" rel="stylesheet" media="all">
 
     <!-- Main CSS-->
-    <link href="css/main1.css" rel="stylesheet" media="all">
+    <link href="../static/css/main1.css" rel="stylesheet" media="all">
 	
 	<!-- Registration Background Css -->    
-    <link rel="stylesheet" type="text/css" href="css/util.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/util.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/main.css">
 </head>
 
 <body>
     <div class="limiter"><!-- <div class="page-wrapper bg-gra-02 p-t-130 p-b-100 font-poppins"> -->
 
-		<div class="container-login100" style="background-image: url('images/bg-01.jpg');">
+		<div class="container-login100" style="background-image: url({% static '/images/bg-01.jpg' %});">
         <div class="wrapper wrapper--w680">
 
             <div class="card card-4">
                 <div class="card-body">
                 	
                     <h2 class="title">Create a new account</h2>
-                    <form method="POST">
+                    <form method="POST" class="post-form" action="/login/">
+                        {% csrf_token %}
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">first name</label>
-                                    <input class="input--style-4" type="text" name="first_name">
+                                    <!--<input class="input&#45;&#45;style-4" type="text" name="first_name">-->
+                                    {{userform.firstname}}
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">last name</label>
-                                    <input class="input--style-4" type="text" name="last_name">
+                                    <!--<input class="input&#45;&#45;style-4" type="text" name="last_name">-->
+                                     {{userform.lastname}}
                                 </div>
                             </div>
                         </div>
@@ -60,7 +64,8 @@
                                 <div class="input-group">
                                     <label class="label">Date of Birth</label>
                                     <div class="input-group-icon">
-                                        <input class="input--style-4 js-datepicker" type="text" name="birthday">
+                                        <!--<input class="input&#45;&#45;style-4 js-datepicker" type="text" name="birthday">-->
+                                        {{userform.dob}}
                                         <i class="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
                                     </div>
                                 </div>
@@ -71,10 +76,12 @@
                                     <div class="p-t-10">
                                         <label class="radio-container m-r-45">Male
                                             <input type="radio" checked="checked" name="gender">
+                                            <!--{{userform.gender}}-->
                                             <span class="checkmark"></span>
                                         </label>
                                         <label class="radio-container">Female
                                             <input type="radio" name="gender">
+                                            <!--{{userform.gender}}-->
                                             <span class="checkmark"></span>
                                         </label>
                                     </div>
@@ -84,13 +91,15 @@
                         <div class="row row-space">
                             <div class="input-group">
                                     <label class="label">Address</label>
-                                    <input class="input--style-4" type="text" name="Address">        
+                                    <!--<input class="input&#45;&#45;style-4" type="text" name="Address">   -->
+                                    {{userform.address}}
                             </div>
                         
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Phone Number</label>
-                                    <input class="input--style-4" type="text" name="phone">
+                                    <!--<input class="input&#45;&#45;style-4" type="text" name="phone">-->
+                                    {{userform.phone}}
                                 </div>
                             </div>
                         </div>
@@ -133,13 +142,15 @@
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Email</label>
-                                    <input class="input--style-4" type="email" name="email">
+                                    <!--<input class="input&#45;&#45;style-4" type="email" name="email">-->
+                                    {{userform.email}}
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Password</label>
-                                    <input class="input--style-4" type="Password" name="phone">
+                                    <!--<input class="input&#45;&#45;style-4" type="Password" name="phone">-->
+                                    {{userform.password}}
                                 </div>
                             </div>
                         </div>
@@ -155,14 +166,14 @@
 </div>
 
     <!-- Jquery JS-->
-    <script src="vendor1/jquery/jquery.min.js"></script>
+    <script src="../static/vendor1/jquery/jquery.min.js"></script>
     <!-- Vendor JS-->
-    <script src="vendor1/select2/select2.min.js"></script>
-    <script src="vendor1/datepicker/moment.min.js"></script>
-    <script src="vendor1/datepicker/daterangepicker.js"></script>
+    <script src="../static/vendor1/select2/select2.min.js"></script>
+    <script src="../static/vendor1/datepicker/moment.min.js"></script>
+    <script src="../static/vendor1/datepicker/daterangepicker.js"></script>
 
     <!-- Main JS-->
-    <script src="js/global1.js"></script>
+    <script src="../static/js/global1.js"></script>
 
 </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 

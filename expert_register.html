@@ -3,7 +3,7 @@
 
 <head>
     <!-- Required meta tags-->
-     {% load staticfiles %}
+    {% load staticfiles %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Colorlib Templates">
@@ -25,137 +25,61 @@
 
     <!-- Main CSS-->
     <link href="../static/css/main1.css" rel="stylesheet" media="all">
-	
-	<!-- Registration Background Css -->    
+    
+    <!-- Registration Background Css -->    
     <link rel="stylesheet" type="text/css" href="../static/css/util.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/main.css">
 </head>
 
 <body>
     <div class="limiter"><!-- <div class="page-wrapper bg-gra-02 p-t-130 p-b-100 font-poppins"> -->
 
-		<div class="container-login100" style="background-image: url({% static '/images/bg-01.jpg' %});">
+        <div class="container-login100" style="background-image: url({% static '/images/bg-01.jpg' %});">
         <div class="wrapper wrapper--w680">
 
             <div class="card card-4">
                 <div class="card-body">
-                	
-                    <h2 class="title">Create a new account</h2>
-                    <form method="POST" class="post-form" action="/login/">
+                    
+                    <h2 class="title">Create a New Account</h2>
+                    <form method="POST" class="post-form" action="/expert_register/">
                         {% csrf_token %}
                         <div class="row row-space">
-                            <div class="col-2">
-                                <div class="input-group">
-                                    <label class="label">first name</label>
-                                    <!--<input class="input&#45;&#45;style-4" type="text" name="first_name">-->
-                                    {{expertform.firstname}}
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="input-group">
-                                    <label class="label">last name</label>
-                                    <!--<input class="input&#45;&#45;style-4" type="text" name="last_name">-->
-                                    {{expertform.lastname}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row row-space">
-                            <div class="col-2">
-                                <div class="input-group">
-                                    <label class="label">Date of Birth</label>
-                                    <div class="input-group-icon">
-                                        <!--<input class="input&#45;&#45;style-4 js-datepicker" type="text" name="birthday">-->
-                                        {{expertform.dob}}
-                                        <i class="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="input-group">
-                                    <label class="label">Gender</label>
-                                    <div class="p-t-10">
-                                        <label class="radio-container m-r-45">Male
-                                            <input type="radio" checked="checked" name="gender">
-                                            <span class="checkmark"></span>
-                                        </label>
-                                        <label class="radio-container">Female
-                                            <input type="radio" name="gender">
-                                            <span class="checkmark"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row row-space">
                             <div class="input-group">
-                                    <label class="label">Address</label>
-                                    <!--<input class="input&#45;&#45;style-4" type="text" name="Address">   -->
-                                    {{expertform.address}}
+                                    <label class="label">First Name</label>
+                                    <input class="input--style-4" type="text" name="firstname">        
                             </div>
                         
                             <div class="col-2">
                                 <div class="input-group">
-                                    <label class="label">Phone Number</label>
-                                    {{expertform.phone}}
+                                    <label class="label">Last Name</label>
+                                    <input class="input--style-4" type="text" name="lastname">
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="row row-space">
                             <div class="col-2">
-                                <div class="input-group">
-                                    <label class="label">Qualification</label>
-                                    <select name="Profession" class="input--style-4" >
-                                        <option value="" selected="selected" disabled="disabled">-- select one --</option>
-                                        <option value="msc nutrition">Msc[Nutrition]</option>
-                                        <option value="phd nutrition">PhD[Nutrition]</option>
-                                        <option value="dip in nutrition">PG Diploma in Nutrition</option>
-                                        <option value="bsc f and n">B.Sc(Food/Nutrition)</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="input-group">
-                                    <label class="label">Registration Number</label>
-                                    <!--<input class="input&#45;&#45;style-4" type="text" name="regno">-->
-                                    {{expertform.regno}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row row-space">
-                            <div class="col-2">
-                                <div class="input-group">
-                                    <label class="label">Year of Registration</label>
-                                    <div class="input-group-icon">
-                                       <!-- <input class="input&#45;&#45;style-4 js-datepicker" type="text" name="birthday">-->
-                                        {{expertform.yearofreg}}
-                                        <i class="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="input-group">
-                                    <label class="label">Experience</label>
-                                    <!--<input class="input&#45;&#45;style-4" type="text" name="experience">-->
-                                    {{expertform.experience}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row row-space">
-                            <div class="col-2">
-                                <div class="input-group">
-                                    <label class="label">Email</label>
-                                   <!-- <input class="input&#45;&#45;style-4" type="email" name="email">-->
-                                    {{expertform.email}}
+                                 <div class="input-group">
+                                    <label class="label">Email Id</label>
+                                    <input class="input--style-4" type="text" name="emailid">
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Password</label>
-                                   <!-- <input class="input&#45;&#45;style-4" type="Password" name="phone">-->
-                                    {{expertform.password}}
+                                    <input class="input--style-4" type="password" name="password1">
                                 </div>
                             </div>
                         </div>
+                        <div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Confirm Password</label>
+                                    <input class="input--style-4" type="password" name="password2">
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="p-t-15">
                             <button class="btn btn--radius-2 btn--blue" type="submit">Submit</button>
                         </div>

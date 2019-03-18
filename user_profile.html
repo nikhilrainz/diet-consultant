@@ -43,20 +43,23 @@
                     <h2 class="title">Complete your Profile</h2>
                     <form method="POST" class="post-form" action="/user_profile/">
                         {% csrf_token %}
+
                         <div class="row row-space">
                             <div class="input-group">
                                     <label class="label">Email Id</label>
-                                    <<!--input class="input&#45;&#45;style-4" type="text" name="Address">-->
+                                    <!--input class="input&#45;&#45;style-4" type="text" name="Address">-->
                                      {{userform.emailid}}
                             </div>
 
                         </div>
+
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Date of Birth</label>
                                     <div class="input-group-icon">
-                                        <input class="input--style-4 js-datepicker" type="text" name="birthday">
+                                        <!--<input class="input&#45;&#45;style-4 js-datepicker" type="text" name="birthday">-->
+                                        {{userform.dob}}
                                         <i class="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
                                     </div>
                                 </div>
@@ -65,14 +68,7 @@
                                 <div class="input-group">
                                     <label class="label">Gender</label>
                                     <div class="p-t-10">
-                                        <label class="radio-container m-r-45">Male
-                                            <input type="radio" checked="checked" name="gender">
-                                            <span class="checkmark"></span>
-                                        </label>
-                                        <label class="radio-container">Female
-                                            <input type="radio" name="gender">
-                                            <span class="checkmark"></span>
-                                        </label>
+                                         {{userform.gender}}
                                     </div>
                                 </div>
                             </div>
@@ -80,13 +76,15 @@
                         <div class="row row-space">
                             <div class="input-group">
                                     <label class="label">Address</label>
-                                    <input class="input--style-4" type="text" name="Address">        
+                                    <!--<input class="input&#45;&#45;style-4" type="text" name="Address"> -->
+                                     {{userform.address}}
                             </div>
                         
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Phone Number</label>
-                                    <input class="input--style-4" type="text" name="phone">
+                                    <!--<input class="input&#45;&#45;style-4" type="text" name="phone">-->
+                                     {{userform.phone}}
                                 </div>
                             </div>
                         </div>
@@ -94,34 +92,13 @@
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Qualification</label>
-                                    <!-- <input class="input--style-4" type="text" name="Qualification"> -->
-                                    <select name="Profession" class="input--style-4" >
-                                        <option value="" selected="selected" disabled="disabled">-- select one --</option>
-                                        <option value="No formal education">No formal education</option>
-                                        <option value="Primary education">Primary education</option>
-                                        <option value="Secondary education">Secondary education</option>
-                                        <option value="Vocational qualification">Vocational qualification</option>
-                                        <option value="Bachelor's degree">Bachelor's degree</option>
-                                        <option value="Master's degree">Master's degree</option>
-                                        <option value="Doctorate or higher">Doctorate or higher</option>
-                                    </select>
+                                     {{userform.qualification}}
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Profession</label>
-                                    <select name="Profession" class="input--style-4" >
-                                        <option value="" selected="selected" disabled="disabled">-- select one --</option>
-                                        <option value = "student">Student</option>
-                                        <option value = "engineer">Engineer</option>
-                                        <option value = "pharmacist">Pharmacist</option>
-                                        <option value = "physician">Physician</option>
-                                        <option value = "accountant">Accountant</option>
-                                        <option value = "lecturer">Lecturer</option>
-                                        <option value = "scientist">Scientist</option>
-                                        <option value = "clerk">Clerk</option>
-                                        <option value = "engineer">Engineer</option>
-                                    </select>
+                                     {{userform.profession}}
                                 </div>
                             </div>
                         </div>

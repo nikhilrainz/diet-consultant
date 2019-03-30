@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Standardized Result</title>
+     {% load staticfiles %}
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+
+    <link rel="stylesheet" href="../static/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/animate.css">
+
+    <link rel="stylesheet" href="../static/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../static/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="../static/css/magnific-popup.css">
+
+    <link rel="stylesheet" href="../static/css/aos.css">
+
+    <link rel="stylesheet" href="../static/css/ionicons.min.css">
+
+    <link rel="stylesheet" href="../static/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="../static/css/jquery.timepicker.css">
+
+
+    <link rel="stylesheet" href="../static/css/flaticon.css">
+    <link rel="stylesheet" href="../static/css/icomoon.css">
+	<link rel="stylesheet" href="../static/css/style.css">
+
+    <!-- Sidebar  -->
+    <link rel="stylesheet" href="../static/css/sidebar.css">
+    <link rel="stylesheet" href="../static/css/font-awesome.min.css">
+</head>
+    <nav class="navbar py-4 navbar-expand-lg ftco_navbar navbar-light bg-light flex-row">
+      <div class="container">
+        <div class="row no-gutters d-flex align-items-start align-items-center px-3 px-md-0">
+          <div class="col-lg-2 pr-4 align-items-center">
+            <a class="navbar-brand" href="/index">Diet <span>Consultant</span></a>
+          </div>
+          <div class="col-lg-10 d-none d-md-block">
+            <div class="row d-flex">
+              <div class="col-md-4 pr-4 d-flex topper align-items-center">
+                <div class="icon bg-white mr-2 d-flex justify-content-center align-items-center"><span class="icon-map"></span></div>
+                <span class="text">Address: 198 West 21th Street, Suite 721 New York NY 10016</span>
+              </div>
+              <div class="col-md pr-4 d-flex topper align-items-center">
+                <div class="icon bg-white mr-2 d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
+                <span class="text">Email: youremail@email.com</span>
+              </div>
+              <div class="col-md pr-4 d-flex topper align-items-center">
+                <div class="icon bg-white mr-2 d-flex justify-content-center align-items-center"><span class="icon-phone2"></span></div>
+                <span class="text">Phone: + 1235 2355 98</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark ftco-navbar-light" id="ftco-navbar">
+      <div class="container d-flex align-items-center">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="oi oi-menu"></span> Menu
+        </button>
+       <p class="button-custom order-lg-last mb-0"><a href="/login" class="btn btn-secondary py-2 px-3">Log Out</a></p>
+        <div class="collapse navbar-collapse" id="ftco-nav">
+          <ul class="navbar-nav mr-auto">
+              {% for employee in result %}
+                <li class="nav-item active"><a href="/user_home/?email={{employee.emailid}}" class="nav-link pl-0">Home</a></li>
+                <li class="nav-item"><a href="/user_dn/?email={{employee.emailid}}" class="nav-link">Diet and Nutrition</a></li>
+                <li class="nav-item"><a href="/user_articles/?email={{employee.emailid}}" class="nav-link">Articles</a></li>
+              {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="navbar-collapse" id="ftco-nav">
+      <div class="sidebar">
+        <ul class="navbar-nav mr-auto">
+           {% for employee in result %}
+              <li class="nav-item active"><a href="/user_home/?email={{employee.emailid}}"><i class="flaticon-doctor"></i>Previous History</a></li>
+           {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <section class="ftco-section" style="margin-left: 5%">
+	<div class="container">
+        <h2 align="center">Patient Report</h2>
+        <h3><span style="float:center;color:red;">
+		{% for employees in name %}
+            {{employees.firstname}} {{employees.lastname}} {{age}} Years
+        {% endfor %}
+        </span>
+        <span style="float:right;color: red;">{{date}} {{time}} </span></h3>
+
+        <div class="table table-striped ">
+          {% for employees in profile %}
+			<table class="table">
+
+				<tr>
+					<th>BMI STATUS : </th>
+                      <td>{{employees.height}} : {{employees.weight}}</td>
+                    <td>{{bmi}}</td>
+                </tr>
+                <tr>
+					<th>Blood Pressure : </th>
+                    <td>{{employees.systolic}} : {{employees.dystolic}}</td>
+                    <td>{{bp}}</td>
+                </tr>
+                <tr>
+					<th>Hemoglobin : </th>
+                    <td>{{employees.hb}}</td>
+					<td>{{hb}}</td>
+				</tr>
+				<tr>
+					<th>Fasting Sugar : </th>
+					<td>{{employees.fastingsugar}}</td>
+                    <td>{{fasting}}</td>
+                </tr>
+                <tr>
+					<th>After Food : </th>
+                    <td>{{employees.afterfood}}</td>
+					<td>{{after}}</td>
+				</tr>
+                <tr>
+                    <th>HDL : </th>
+                    <td>{{employees.hdl}}</td>
+                    <td>{{hdl}}</td>
+                </tr>
+                <tr>
+                    <th>LDL : </th>
+                    <td>{{employees.ldl}}</td>
+                    <td>{{ldl}}</td>
+                </tr>
+                <tr>
+                    <th>Tryglycerides : </th>
+                    <td>{{employees.tryglycerides}}</td>
+                    <td>{{tryglyc}}</td>
+                </tr>
+                <tr>
+                    <th>Total Cholestrol : </th>
+                    <td>{{employees.totalcholestrol}}</td>
+                    <td>{{total}}</td>
+                </tr>
+                <tr>
+                    <th>Sedentary Status : </th>
+                    <td>{{employees.sedentaryperson}}</td>
+                    <td>{{sedentary}}</td>
+                </tr>
+                <tr>
+                    <th>Heart Disease : </th>
+                     <td>{{employees.heartdisease}}</td>
+                    <td>{{heart}}</td>
+                </tr>
+                <tr>
+                    <th>Breakfast : </th>
+                    <td>-----</td>
+                    <td>{{breakfast}}</td>
+                </tr>
+                <tr>
+                    <th>Lunch : </th>
+                    <td>-----</td>
+                    <td>{{lunch}}</td>
+                </tr>
+                <tr>
+                    <th>Snacks : </th>
+                    <td>-----</td>
+                    <td>{{snacks}}</td>
+                </tr>
+                <tr>
+                    <th>Dinner : </th>
+                    <td>-----</td>
+                    <td>{{dinner}}</td>
+                </tr>
+			</table>
+          {% endfor %}
+		</div>
+	</div>
+</section>

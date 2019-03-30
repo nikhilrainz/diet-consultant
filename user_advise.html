@@ -41,26 +41,23 @@
                         <form method="POST" class="post-form" action="/user_advise/">
                             {% csrf_token %}
                             <div class="row row-space">
-                            <div class="input-group">
+                                <div class="input-group">
                                     <label class="label">Email Id</label>
-                                    <!--input class="input&#45;&#45;style-4" type="text" name="Address">-->
-                                     {{useradvise.emailid}}
-                            </div>
+                                    <input class="input--style-4" type="text" name="emailid" placeholder="Email id">
+                                </div>
 
-                        </div>
+                             </div>
                             <div class="row row-space">
                                 <div class="col-2">
                                      <div class="input-group">
                                         <label class="label">Height</label>
-                                        <!--<input class="input&#45;&#45;style-4" type="text" name="height">-->
-                                         {{useradvise.height}}
+                                        <input class="input--style-4" type="text" name="height" placeholder="Height">
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="input-group">
                                         <label class="label">Weight</label>
-                                        <!--<input class="input&#45;&#45;style-4" type="text" name="weight">-->
-                                        {{useradvise.weight}}
+                                        <input class="input--style-4" type="text" name="weight" placeholder="Weight">
                                     </div>
                                 </div>
                             </div>
@@ -68,30 +65,70 @@
                                 <div class="col-2">
                                     <div class="input-group">
                                         <label class="label">HB</label>
-                                        <!--<input class="input&#45;&#45;style-4" type="text" name="hb">-->
-                                        {{useradvise.hb}}
+                                        <input class="input--style-4" type="text" name="hb" placeholder="HB">
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="input-group">
                                         <label class="label">BP</label>
-                                        <!--<input class="input&#45;&#45;style-4" type="text" name="bp">-->
-                                        {{useradvise.bp}}
+                                        <input class="input--style-4" type="text" name="systolic" placeholder="Systolic" style="width:40%;">&nbsp/
+                                        <input class="input--style-4" type="text" name="dystolic" placeholder="Dystolic" style="width:40%;">&nbsp
+
                                     </div>
                                 </div>
                             </div>
                             <div class="row row-space">
                                 <div class="input-group">
                                         <label class="label">Sugar</label>
-                                        <!--<input class="input&#45;&#45;style-4" type="text" name="sugar">-->
-                                        {{useradvise.sugar}}
+                                        <input class="input--style-4" type="text" name="fasting sugar" placeholder="Fasting Sugar" style="width:30%;">&nbsp/
+                                        <input class="input--style-4" type="text" name="after food" placeholder="After Food" style="width:25%;">
                                 </div>
-                            
+                            </div>
+                            <div class="row row-space">
                                 <div class="col-2">
                                     <div class="input-group">
                                         <label class="label">Cholestrol</label>
-                                        <!--<input class="input&#45;&#45;style-4" type="text" name="cholestrol">-->
-                                        {{useradvise.cholestrol}}
+                                        <input class="input--style-4" type="text" name="hdl" placeholder="HDL" style="width:30%;">&nbsp/
+                                        <input class="input--style-4" type="text" name="ldl" placeholder="LDL" style="width:30%;">&nbsp
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="input-group">
+                                        <label class="label">Tryglycerides/Total Cholestrol</label>
+                                        <input class="input--style-4" type="text" name="try" placeholder="Tryglycerides" style="width:40%;">&nbsp/
+                                        <input class="input--style-4" type="text" name="total" placeholder="Total Cholestrol" style="width:40%;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row row-space">
+                                <div class="col-2">
+                                    <div class="input-group">
+                                       <label class="label">Are you suffering from Heart Diseases?</label>
+                                        <div class="p-t-10">
+                                           <label class="radio-container m-r-45">Yes
+                                                <input type="radio" checked="checked" name="heartdiseases" value="Yes">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                            <label class="radio-container">No
+                                                <input type="radio" name="heartdiseases" value="No">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="input-group">
+                                        <label class="label">Are you a Sedentary Person?</label>
+                                        <div class="p-t-10">
+                                            <label class="radio-container m-r-45">Yes
+                                                <input type="radio" checked="checked" name="sedentary" value="Yes">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                            <label class="radio-container">No
+                                                <input type="radio" name="sedentary" value="No">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +137,14 @@
                                     <div class="input-group">
                                        <label class="label">Breakfast</label>
                                         <div class="p-t-10">
-                                            {{useradvise.breakfast}}
+                                           <label class="radio-container m-r-45">Veg
+                                                <input type="radio" checked="checked" name="breakfast" value="veg">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                            <label class="radio-container">Non-Veg
+                                                <input type="radio" name="breakfast" value="nonveg">
+                                                <span class="checkmark"></span>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -108,7 +152,14 @@
                                     <div class="input-group">
                                         <label class="label">Lunch</label>
                                         <div class="p-t-10">
-                                            {{useradvise.lunch}}
+                                            <label class="radio-container m-r-45">Veg
+                                                <input type="radio" checked="checked" name="lunch" value="veg">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                            <label class="radio-container">Non-Veg
+                                                <input type="radio" name="lunch" value="nonveg">
+                                                <span class="checkmark"></span>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -118,14 +169,28 @@
                                     <div class="input-group">
                                         <label class="label">Snacks</label>
                                         <div class="p-t-10">
-                                            {{useradvise.snacks}}
+                                            <label class="radio-container m-r-45">Veg
+                                                <input type="radio" checked="checked" name="snacks" value="veg">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                            <label class="radio-container">Non-Veg
+                                                <input type="radio" name="snacks" value="nonveg">
+                                                <span class="checkmark"></span>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="input-group">
                                         <label class="label">Dinner</label>
-                                        {{useradvise.dinner}}
+                                         <label class="radio-container m-r-45">Veg
+                                                <input type="radio" checked="checked" name="dinner" value="veg">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                            <label class="radio-container">Non-Veg
+                                                <input type="radio" name="dinner" value="nonveg">
+                                                <span class="checkmark"></span>
+                                            </label>
                                     </div>
                                 </div>
                             </div>    

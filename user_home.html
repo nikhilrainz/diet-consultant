@@ -72,9 +72,11 @@
         <p class="button-custom order-lg-last mb-0"><a href="/login" class="btn btn-secondary py-2 px-3">Log Out</a></p>
         <div class="collapse navbar-collapse" id="ftco-nav">
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item active"><a href="/user_home" class="nav-link pl-0">Home</a></li>
-            <li class="nav-item"><a href="/user_dn" class="nav-link">Diet and Nutrition</a></li>
-            <li class="nav-item"><a href="/user_articles" class="nav-link">Articles</a></li>
+           {% for employee in userhomepage %}
+            <li class="nav-item active"><a href="/user_home/?email={{employee.emailid}}" class="nav-link pl-0">Home</a></li>
+            <li class="nav-item"><a href="/user_dn/?email={{employee.emailid}}" class="nav-link">Diet and Nutrition</a></li>
+            <li class="nav-item"><a href="/user_articles/?email={{employee.emailid}}" class="nav-link">Articles</a></li>
+            {% endfor %}
           </ul>
         </div>
       </div>
@@ -90,71 +92,82 @@
     </div>
     
     <!-- END nav -->
-
     <section class="ftco-section cls" id="profile" style="margin-left: 5%;">
-    <div class="container">
-      <h2>Basic Profile</h2>
-        <table class="table">
-        <tr>
-          <th>Name</th>
-          <td>Nikhil Prakash</td>
-        </tr>
-        <tr>
-          <th>Date of Birth</th>
-          <td>17-06-1995</td>
-        </tr>
-        <tr>  
-          <th>Gender</th>
-          <td>Male</td>
-        </tr>
-        <tr>
-          <th>Address</th>
-          <td>Kamala Towers, Vaishnav Tc 15/1945-2, Ganapathy Covil Road, Vazhuthacaud, Thycaud PO Trivandrum </td>
-        </tr>
-        <tr>
-          <th>Phone Number</th>
-          <td>9947577142</td>
-        </tr>
-        <tr>
-          <th>Qualification</th>
-          <td>PG Diploma in Nutrition</td>
-        </tr>
-        <tr>
-          <th>Profession</th>
-          <td>Student</td>
-        </tr>
-        <tr>
-          <th>Email Id</th>
-          <td>nikhilprakash95@gmail.com</td>
-        </tr>
-      </table>
-    </div>
-  </section>
+      <div class="container">
+        <h2>Basic Profile</h2>
+        {% for employee in userprofile %}
+          <table class="table">
+            <tr>
+              <th>Profile Picture</th>
+              <td><img src="{{ MEDIA_URL }}{{ employee.profilepic }}" width="120px" height="120px"></td>
+            </tr>
+            <tr>
+              <th>Name</th>
+              <td>{{employee.firstname}} {{employee.lastname}}</td>
+            </tr>
+            <tr>
+              <th>Email Id</th>
+              <td>{{employee.emailid}}</td>
+            </tr>
+            <tr>
+              <th>Date of Birth</th>
+              <td>{{employee.dob}}</td>
+            </tr>
+            <tr>
+              <th>Gender</th>
+              <td>{{employee.gender}}</td>
+            </tr>
+            <tr>
+              <th>Address</th>
+              <td>{{employee.address}}</td>
+            </tr>
+            <tr>
+              <th>Phone Number</th>
+              <td>{{employee.phone}}</td>
+            </tr>
+            <tr>
+              <th>Qualification</th>
+              <td>{{employee.qualification}}</td>
+            </tr>
+            <tr>
+              <th>Profession</th>
+              <td>{{employee.profession}}</td>
+            </tr>
+          </table>
+        {% endfor %}
+      </div>
+    </section>
 
   <section class="ftco-section cls" id="change" style="margin-left: 5%;">
     <div class="container">
-      <h2>Basic Profile</h2>
+    <form method="POST" class="post-form" action="/user_home">
+      <h2>Change Password</h2>
         <table class="table">
+      {% for employee in userhomepage %}
         <tr>
           <th>Email Id</th>
-          <td><input type="text" name="email" value="nikhilprakash95@gmail.com" disabled="" style="width: 35%;"></td>
+          <td>{{employee.emailid}}</td>
         </tr>
+      {% endfor %}
         <tr>
           <th>New Password</th>
-          <td><input type="password" name="newpass" placeholder="Enter your New Password" style="width: 35%;"></td>
+          <td><input type="password" name="newpass" placeholder="Enter your New Password" style="width: 35%;">
+              <!--{{employee.password}}-->
+          </td>
         </tr>
         <tr>  
           <th>Confirm Password</th>
-          <td><input type="password" name="cnfpass" placeholder="Re-enter new password" style="width: 35%;"></td>
+          <td><input type="password" name="cnfpass" placeholder="Re-enter new password" style="width: 35%;">
+              <!--{{employee.confirmpassword}}-->
+          </td>
         </tr>
         <tr>
           <td class="button-custom order-lg-last mb-0 btn btn-success py-2 px-3" align="center">Update Password</td>
         </tr>
       </table>
+    </form>
     </div>
   </section>
-    
- 
   <!-- loader -->
   <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
 

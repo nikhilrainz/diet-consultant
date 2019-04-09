@@ -72,10 +72,12 @@
         <p class="button-custom order-lg-last mb-0"><a href="/login" class="btn btn-secondary py-2 px-3">Log Out</a></p>
         <div class="collapse navbar-collapse" id="ftco-nav">
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item active"><a href="/experts_home" class="nav-link pl-0">Home</a></li>
-            <li class="nav-item"><a href="/experts_doctor" class="nav-link">Experts</a></li>
-            <li class="nav-item"><a href="/experts_dn" class="nav-link">Diet and Nutrition</a></li>
-            <li class="nav-item"><a href="/experts_articles" class="nav-link">Articles</a></li>
+            {% for employees in experthomepage %}
+              <li class="nav-item active"><a href="/expert_home/?email={{employees.emailid}}" class="nav-link pl-0">Home</a></li>
+              <li class="nav-item"><a href="/expert_doctor/?email={{employees.emailid}}" class="nav-link">Experts</a></li>
+              <li class="nav-item"><a href="/expert_dn/?email={{employees.emailid}}" class="nav-link">Diet and Nutrition</a></li>
+              <li class="nav-item"><a href="/expert_articles/?email={{employees.emailid}}" class="nav-link">Articles</a></li>
+            {% endfor %}
           </ul>
         </div>
       </div>
@@ -93,72 +95,91 @@
 
    <section class="ftco-section cls" id="profile" style="margin-left: 5%;">
     <div class="container">
+
       <h2>Basic Profile</h2>
+      {% for employee in expertprofile %}
         <table class="table">
-        <tr>
-          <th>Name</th>
-          <td>Dr. Tiny Nair</td>
-        </tr>
-        <tr>
-          <th>Date of Birth</th>
-          <td>17-06-1960</td>
-        </tr>
-        <tr>  
-          <th>Gender</th>
-          <td>Male</td>
-        </tr>
-        <tr>
-          <th>Address</th>
-          <td>Kamala Towers, Vaishnav Tc 15/1945-2, Ganapathy Covil Road, Vazhuthacaud, Thycaud PO Trivandrum </td>
-        </tr>
-        <tr>
-          <th>Phone Number</th>
-          <td>9947577142</td>
-        </tr>
-        <tr>
-          <th>Qualification</th>
-          <td>PG Diploma in Nutrition</td>
-        </tr>
-        <tr>
-          <th>Registration Number</th>
-          <td>IMAOD 4165563</td>
-        </tr>
-        <tr>
-          <th>Year of Registration</th>
-          <td>1985</td>
-        </tr>
-        <tr>
-          <th>Experience</th>
-          <td>35</td>
-        </tr>
-        <tr>
-          <th>Email Id</th>
-          <td>dr.tinynair@gmail.com</td>
-        </tr>
-      </table>
+          <thead align="justify">
+            <tr>
+              <th>Profile Picture</th>
+              <td><img src="{{ MEDIA_URL }}{{employee.profilepic}}" width="150px",height="150px"> </td>
+            </tr>
+            <tr>
+              <th>Name</th>
+              <td>{{employee.firstname}} {{employee.lastname}}</td>
+            </tr>
+            <tr>
+              <th>Email Id</th>
+              <td>{{employee.emailid}}</td>
+            </tr>
+            <tr>
+              <th>Date of Birth</th>
+              <td>{{employee.dob}}</td>
+            </tr>
+            <tr>
+              <th>Gender</th>
+              <td>{{employee.gender}}</td>
+            </tr>
+            <tr>
+              <th>Address</th>
+              <td>{{employee.address}} </td>
+            </tr>
+            <tr>
+              <th nowrap=" ">Phone Number</th>
+              <td>{{employee.phone}}</td>
+            </tr>
+            <tr>
+              <th>Qualification</th>
+              <td>{{employee.qualification}}</td>
+            </tr>
+            <tr>
+              <th>Registration Number</th>
+              <td>{{employee.registerno}}</td>
+            </tr>
+            <tr>
+              <th nowrap=" ">Year of Registration</th>
+              <td>{{employee.yearofreg}}</td>
+            </tr>
+            <tr>
+              <th>Experience</th>
+              <td>{{employee.experience}}</td>
+            </tr>
+            <tr>
+              <th>About</th>
+              <td>{{employee.profstatement}}</td>
+            </tr>
+            <tr>
+              <th nowrap=" ">Language Known</th>
+              <td>{{employee.languageknown}}</td>
+            </tr>
+          </thead>
+        </table>
+       {% endfor %}
     </div>
   </section>
 
   <section class="ftco-section cls" id="change" style="margin-left: 5%;">
      <div class="container">
-      
     <h2>Change Password</h2>
     <table class="table">
-        <tr>
-          <th>Email Id</th>
-          <td><input type="text" name="email" value="dr.tinynair@gmail.com" disabled="" style="width: 35%;"></td>
-        </tr>
+        {% for employee in experthomepage %}
+          <tr>
+            <th>Email Id</th>
+            <td>{{employee.emailid}}</td>
+          </tr>
+        {% endfor %}
         <tr>
           <th>New Password</th>
           <td><input type="password" name="newpass" placeholder="Enter your New Password" style="width: 35%;"></td>
         </tr>
-        <tr>  
+        <tr>
           <th>Confirm Password</th>
           <td><input type="password" name="cnfpass" placeholder="Re-enter new password" style="width: 35%;"></td>
         </tr>
         <tr>
           <td class="button-custom order-lg-last mb-0 btn btn-success py-2 px-3" align="center">Update Password</td>
         </tr>
+
       </table>
     </div>
   </section>

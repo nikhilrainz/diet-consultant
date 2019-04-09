@@ -1,0 +1,50 @@
+
+<body>
+<section class="ftco-section"><!DOCTYPE html>
+<html>
+<head>
+	<title>User Chat</title>
+     {% load staticfiles %}
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+
+    <link rel="stylesheet" href="../static/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/animate.css">
+
+    <link rel="stylesheet" href="../static/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../static/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="../static/css/magnific-popup.css">
+
+    <link rel="stylesheet" href="../static/css/aos.css">
+
+    <link rel="stylesheet" href="../static/css/ionicons.min.css">
+
+    <link rel="stylesheet" href="../static/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="../static/css/jquery.timepicker.css">
+
+
+    <link rel="stylesheet" href="../static/css/flaticon.css">
+    <link rel="stylesheet" href="../static/css/icomoon.css">
+	<link rel="stylesheet" href="../static/css/style.css">
+</head>
+	<div class="container">
+		<div >
+			 <label class="label">Write your Questionnaire</label><br>
+            {% for employee in experts %}
+             <input class="input--style-4" type="text" value="{{employee.firstname}} {{employee.lastname}}" disabled>
+             <input class="input--style-4" type="text" value="{{employee.registerno}}" disabled>
+            {% endfor %}
+		</div><br>
+        <form method="POST" action="/user_request/">
+            {% csrf_token %}
+            <textarea  rows="10" cols="50" name="chat"></textarea>
+            <div class="p-t-15">
+                <button class="btn btn-outline-info" type="submit">Send</button>
+            </div>
+        </form>
+    </div>
+</section>
+</body>
+</html>

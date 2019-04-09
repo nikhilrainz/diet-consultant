@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponse,redirect,loader
+from django.shortcuts import render,HttpResponse,redirect,loader,get_object_or_404
 from django.contrib import messages
 from django import forms
 from datetime import datetime,date,time
@@ -7,15 +7,28 @@ from mydiet.models import UserProfile
 from mydiet.models import ExpertProfile
 from mydiet.models import UserAdvise
 from mydiet.models import BMI,BP,HB_FEMALE,HB_MALE,HDL,LDL,Tryglycerides,TotalCholestrol,FastingSugar,AfterFood
-
-
+from mydiet.models import Report
+from mydiet.models import UserChat
 "-----------------------HomePages-------------------------------"
 def index(request):
     template = loader.get_template('index.html')
     return HttpResponse(template.render())
 def expert(request):
-    template = loader.get_template('experts.html')
-    return HttpResponse(template.render())
+    obj1 = Login.objects.filter(entry="Expert")
+    length = len(obj1)
+    mydict = []
+    for i in range(len(obj1)):
+        mylogin = obj1[i]
+        useremail = mylogin.emailid
+        obj2 = ExpertProfile.objects.filter(emailid=useremail).values().distinct()
+        mydict.append(obj2)
+    print(mydict)
+    length = len(mydict)
+    print(length)
+    print(type(obj1))
+    print(type(mydict))
+    context = {'expert': mydict}
+    return render(request,'experts.html',context)
 def dietandnutrition(request):
     template = loader.get_template('dietandnutrition.html')
     return HttpResponse(template.render())
@@ -81,16 +94,22 @@ def login(request):
             passw = request.POST.get('pass')
 
             obj1 = Login.objects.get(emailid = userid)
+            dbfirstname = obj1.firstname
+            dblastname = obj1.lastname
             dbemail = obj1.emailid
             dbpass = obj1.password
             dbstatus = obj1.status
             dbentry = obj1.entry
 
             if dbemail == userid and dbpass == passw and dbstatus == 0  and dbentry == "User" :
+                request.session['firstname'] = dbfirstname
+                request.session['lastname'] = dblastname
                 return redirect('/user_profile/?email=%s'%dbemail)
             elif dbemail == userid and dbpass == passw and dbstatus == 1  and dbentry == "User" :
                 return redirect('/user_home/?email=%s'% dbemail)
             elif dbemail == userid and dbpass == passw and dbstatus == 0  and dbentry == "Expert" :
+                request.session['firstname'] = dbfirstname
+                request.session['lastname'] = dblastname
                 return redirect('/expert_profile/?email=%s'% dbemail)
             elif dbemail == userid and dbpass == passw and dbstatus == 1  and dbentry == "Expert" :
                 return redirect('/expert_home/?email=%s'% dbemail)
@@ -112,6 +131,11 @@ def user_profile(request):
             myform.phone = request.POST.get('phone')
             myform.qualification = request.POST.get('qualification')
             myform.profession = request.POST.get('profession')
+            firstname = request.session['firstname']
+            lastname = request.session['lastname']
+            myform.firstname = firstname
+            myform.lastname = lastname
+            myform.profilepic = request.FILES['picture']
 
             em = request.POST.get('emailid')
             obj1 = Login.objects.get(emailid = em)
@@ -132,7 +156,7 @@ def user_profile(request):
 
 def expert_profile(request):
     if request.method == "POST":
-        if request.POST.get('emailid') and request.POST.get('birthday') and request.POST.get('gender') and request.POST.get('address') and request.POST.get('phone') and request.POST.get('qualification') and request.POST.get('regno') and request.POST.get('year') and request.POST.get('experience'):
+        if request.POST.get('emailid') and request.POST.get('birthday') and request.POST.get('gender') and request.POST.get('address') and request.POST.get('phone') and request.POST.get('qualification') and request.POST.get('regno') and request.POST.get('year') and request.POST.get('experience') and request.POST.get('about') and request.POST.get('language'):
             myform = ExpertProfile()
             myform.emailid = request.POST.get('emailid')
             myform.dob = request.POST.get('birthday')
@@ -143,6 +167,13 @@ def expert_profile(request):
             myform.registerno = request.POST.get('regno')
             myform.yearofreg = request.POST.get('year')
             myform.experience = request.POST.get('experience')
+            firstname = request.session['firstname']
+            lastname = request.session['lastname']
+            myform.firstname = firstname
+            myform.lastname = lastname
+            myform.profilepic = request.FILES['picture']
+            myform.profstatement = request.POST.get('about')
+            myform.languageknown = request.POST.get('language')
 
             em = request.POST.get('emailid')
             obj1 = Login.objects.get(emailid=em)
@@ -165,6 +196,7 @@ def expert_profile(request):
 def user_home(request):
     useremail = request.GET.get('email')
     print("useremail = ",useremail)
+    request.session['email'] = useremail
     userregister = Login.objects.filter(emailid=useremail).values()
     print(userregister)
     userprofile = UserProfile.objects.filter(emailid = useremail).values()
@@ -174,7 +206,16 @@ def user_home(request):
 def user_dn(request):
     useremail = request.GET.get('email')
     userregister = Login.objects.filter(emailid=useremail).values()
-    return render(request, 'user_d & n.html', {'userdn' : userregister})
+    stat = ''
+    try:
+        userreport = Report.objects.get(emailid=useremail)
+        print("UR = ",userreport)
+        status = userreport.status  # if status = 0 then preview history will be disabled
+        stat = status
+    except Report.DoesNotExist:
+        stat = 0
+    request.session['email'] = useremail # passing email so as to fetch history
+    return render(request, 'user_d & n.html', {'userdn' : userregister,'status' : stat})
 
 def user_advise(request):
     if request.method == "POST":
@@ -465,10 +506,89 @@ def user_result(request):
     #For Homepage Links
     userregister = Login.objects.filter(emailid=useremail).values()
     print("User = ",userregister)
-    userhealth = UserAdvise.objects.filter(emailid=useremail).values()
+    userhealth = UserAdvise.objects.filter(emailid=useremail, id=userid).values()
     Context ={'bmi' : BMIStatus, 'bp' : BPStatus, 'hb' : HBSTATUS, 'fasting' : FastingStatus, 'after' : AfterFoodStatus, 'hdl' : HDLStatus, 'ldl' : LDLStatus, 'tryglyc' : TryStatus, 'total' : TotalStatus, 'sedentary' : SedentaryStatus, 'heart' : HeartStatus, 'breakfast' : BreakfastStatus, 'lunch' : LunchStatus, 'snacks' : SnacksStatus, 'dinner' : DinnerStatus, 'date' : DateStatus, 'time' : TimeStatus, 'name' : Name, 'age' : age, 'profile' : userhealth, 'result' : userregister}
+
+    #Saving the above report to Report table
+    form = Report()
+    form.emailid = useremail
+    form.bmi = BMIStatus
+    form.bp = BPStatus
+    form.hb = HBSTATUS
+    form.sugar = FastingStatus
+    form.afterfood = AfterFoodStatus
+    form.hdl = HDLStatus
+    form.ldl = LDLStatus
+    form.tryglycerine = TryStatus
+    form.totcholestrol = TotalStatus
+    form.sedentary = SedentaryStatus
+    form.heart = HeartStatus
+    form.breakfast = BreakfastStatus
+    form.lunch = LunchStatus
+    form.snacks = SnacksStatus
+    form.dinner = DinnerStatus
+    form.date = DateStatus
+    form.time = TimeStatus
+    form.status = 1
+    form.save()
+    request.session['email'] = useremail
     return render(request, 'user_result.html',Context)
 
+def user_report(request):
+    useremail = request.session['email']
+    print("my email = ",useremail)
+    report = Report.objects.filter(emailid = useremail).values().order_by('-date','-time')
+    print(report)
+    name = Login.objects.filter(emailid=useremail).values()
+    return render(request, 'user_report.html', {'userreport' : report, 'name': name})
+def user_doctor(request):
+    obj1 = Login.objects.filter(entry="Expert")
+    length = len(obj1)
+    mydict = []
+    for i in range(len(obj1)):
+        mylogin = obj1[i]
+        useremail = mylogin.emailid
+        obj2 = ExpertProfile.objects.filter(emailid=useremail).values().distinct()
+        mydict.append(obj2)
+    print(mydict)
+    length = len(mydict)
+    print(length)
+    print(type(obj1))
+    print(type(mydict))
+    context = {'expert': mydict}
+    return render(request, 'user_doctor.html', context)
+def user_expertview(request):
+    regno = request.GET.get('regno')
+    print("Regno = ",regno)
+    experts = ExpertProfile.objects.filter(registerno=regno).values()
+    print("Experts = ",experts)
+    request.session['regnum'] = regno
+    return render(request,'user_expertview.html',{'experts' : experts})
+def user_request(request):
+    regno = request.session['regnum'] #For filtering data
+    print("REG = ",regno)
+    mysess = request.session['email'] #Calling email from user home to fetch patient name and emailid
+    print("My session = ", mysess)
+    user = UserProfile.objects.get(emailid=mysess)
+    experts = ExpertProfile.objects.get(registerno=regno)
+    print("Experts = ", experts)
+    expobj = ExpertProfile.objects.filter(registerno=regno).values() #passing as context
+    if request.method == "POST":
+        if request.POST.get('chat'):
+            myform = UserChat()
+            "------------------Fetching user queries from User profile---------------------------"
+            myform.patientname = user.firstname + user.lastname
+            myform.patientemailid = user.emailid
+            "------------Text area field from html-----------------"
+            myform.question = request.POST.get('chat')
+            "------------------Fetching expert queries from Expert profile---------------------------"
+            myform.doctorname = experts.firstname + experts.lastname
+            myform.doctoremailid = experts.emailid
+            myform.status = 1
+            myform.save()
+        else:
+            myform = UserChat()
+    return render(request,'user_chat.html',{'experts' : expobj})
 def user_articles(request):
     useremail = request.GET.get('email')
     userregister = Login.objects.filter(emailid=useremail).values()
@@ -485,7 +605,21 @@ def expert_home(request):
 def expert_doctor(request):
     useremail = request.GET.get('email')
     expertregister = Login.objects.filter(emailid=useremail).values()
-    return render(request, 'experts_doctor.html', {'expertdoctor': expertregister}, )
+    obj1 = Login.objects.filter(entry="Expert")
+    length = len(obj1)
+    mydict = []
+    for i in range(len(obj1)):
+        mylogin = obj1[i]
+        useremail = mylogin.emailid
+        obj2 = ExpertProfile.objects.filter(emailid=useremail).values().distinct()
+        mydict.append(obj2)
+    print(mydict)
+    length = len(mydict)
+    print(length)
+    print(type(obj1))
+    print(type(mydict))
+    context = {'expert': mydict,'expertdoctor': expertregister}
+    return render(request, 'experts_doctor.html',context)
 def expert_dn(request):
     useremail = request.GET.get('email')
     expertregister = Login.objects.filter(emailid=useremail).values()

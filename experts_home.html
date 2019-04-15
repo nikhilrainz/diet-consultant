@@ -73,10 +73,10 @@
         <div class="collapse navbar-collapse" id="ftco-nav">
           <ul class="navbar-nav mr-auto">
             {% for employees in experthomepage %}
-              <li class="nav-item active"><a href="/expert_home/?email={{employees.emailid}}" class="nav-link pl-0">Home</a></li>
-              <li class="nav-item"><a href="/expert_doctor/?email={{employees.emailid}}" class="nav-link">Experts</a></li>
-              <li class="nav-item"><a href="/expert_dn/?email={{employees.emailid}}" class="nav-link">Diet and Nutrition</a></li>
-              <li class="nav-item"><a href="/expert_articles/?email={{employees.emailid}}" class="nav-link">Articles</a></li>
+              <li class="nav-item active"><a href="/expert_home/?expertemail={{employees.emailid}}" class="nav-link pl-0">Home</a></li>
+              <li class="nav-item"><a href="/expert_doctor/?expertemail={{employees.emailid}}" class="nav-link">Experts</a></li>
+              <li class="nav-item"><a href="/expert_dn/?expertemail={{employees.emailid}}" class="nav-link">Diet and Nutrition</a></li>
+              <li class="nav-item"><a href="/expert_articles/?expertemail={{employees.emailid}}" class="nav-link">Articles</a></li>
             {% endfor %}
           </ul>
         </div>

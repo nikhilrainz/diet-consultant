@@ -65,10 +65,12 @@
 	       <p class="button-custom order-lg-last mb-0"><a href="/login" class="btn btn-secondary py-2 px-3">Log Out</a></p>
 	      <div class="collapse navbar-collapse" id="ftco-nav">
 	        <ul class="navbar-nav mr-auto">
-	        	<li class="nav-item"><a href="/experts_home" class="nav-link pl-0">Home</a></li>
-            <li class="nav-item"><a href="/experts_doctor" class="nav-link">Experts</a></li>
-            <li class="nav-item"><a href="/experts_dn" class="nav-link">Diet and Nutrition</a></li>
-            <li class="nav-item active"><a href="/experts_articles" class="nav-link">Articles</a></li>
+	        	{% for employees in expertarticle %}
+              <li class="nav-item active"><a href="/expert_home/?expertemail={{employees.emailid}}" class="nav-link pl-0">Home</a></li>
+              <li class="nav-item"><a href="/expert_doctor/?expertemail={{employees.emailid}}" class="nav-link">Experts</a></li>
+              <li class="nav-item"><a href="/expert_dn/?expertemail={{employees.emailid}}" class="nav-link">Diet and Nutrition</a></li>
+              <li class="nav-item active"><a href="/expert_articles/?expertemail={{employees.emailid}}" class="nav-link">Articles</a></li>
+            {% endfor %}
 	        </ul>
 	      </div>
 	    </div>
@@ -76,8 +78,10 @@
     <div class="navbar-collapse" id="ftco-nav">
       <div class="sidebar">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active"><a href="/experts_home"><i class="flaticon-doctor"></i> View Profile</a></li>
-          <li class="nav-item active"><a href="/experts_home"><i class="flaticon-experiment-results"></i> Change Password</a></li>
+          {% for employees in expertarticle %}
+          <li class="nav-item active"><a href="/expert_home"><i class="flaticon-doctor"></i> View Profile</a></li>
+          <li class="nav-item active"><a href="/expert_home"><i class="flaticon-experiment-results"></i> Change Password</a></li>
+			{% endfor %}
         </ul>
       </div>
     </div>

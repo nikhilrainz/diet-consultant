@@ -65,10 +65,12 @@
        <p class="button-custom order-lg-last mb-0"><a href="/login" class="btn btn-secondary py-2 px-3">Log Out</a></p>
         <div class="collapse navbar-collapse" id="ftco-nav">
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item "><a href="/experts_home" class="nav-link pl-0">Home</a></li>
-            <li class="nav-item"><a href="/experts_doctor" class="nav-link">Experts</a></li>
-            <li class="nav-item active"><a href="/experts_dn" class="nav-link">Diet and Nutrition</a></li>
-            <li class="nav-item"><a href="/experts_articles" class="nav-link">Articles</a></li>
+            {% for employees in expertdn %}
+              <li class="nav-item active"><a href="/expert_home/?email={{employees.emailid}}" class="nav-link pl-0">Home</a></li>
+              <li class="nav-item"><a href="/expert_doctor/?email={{employees.emailid}}" class="nav-link">Experts</a></li>
+              <li class="nav-item active"><a href="/expert_dn/?email={{employees.emailid}}" class="nav-link">Diet and Nutrition</a></li>
+              <li class="nav-item"><a href="/expert_articles/?email={{employees.emailid}}" class="nav-link">Articles</a></li>
+            {% endfor %}
           </ul>
         </div>
       </div>
@@ -76,8 +78,10 @@
     <div class="navbar-collapse" id="ftco-nav">
       <div class="sidebar">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active"><a href="/experts_home"><i class="flaticon-doctor"></i> View Profile</a></li>
-          <li class="nav-item active"><a href="/experts_home"><i class="flaticon-doctor"></i> Change Password</a></li>
+          {% for employees in expertdn %}
+          <li class="nav-item active"><a href="/expert_home/?expertemail={{employees.emailid}}"><i class="flaticon-doctor"></i> View Profile</a></li>
+          <li class="nav-item active"><a href="/expert_home/?expertemail={{employees.emailid}}"><i class="flaticon-experiment-results"></i> Change Password</a></li>
+			{% endfor %}
         </ul>
       </div>
     </div>
@@ -89,7 +93,13 @@
         <div class="row justify-content-center mb-5 pb-2">
           <div class="col-md-8 text-center heading-section ftco-animate">
             <p class="button-custom order-lg-last mb-0">
-              <a href="/experts_viewreq" class="btn btn-success py-2 px-3">View Requests</a>
+               {% for employees in expertdn %}
+                  {% if status == 1 %}
+                    <a href="/expert_viewreq/?expertemail={{employees.emailid}}" class="btn btn-success py-2 px-3">View Requests</a>
+                  {% else %}
+                    <a href="#" class="btn btn-success py-2 px-3">No request yet!!!</a>
+                  {% endif %}
+              {% endfor %}
             </p>
           </div>
         </div>

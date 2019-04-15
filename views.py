@@ -1,4 +1,5 @@
 from django.shortcuts import render,HttpResponse,redirect,loader,get_object_or_404
+from django.db.models import Q
 from django.contrib import messages
 from django import forms
 from datetime import datetime,date,time
@@ -8,7 +9,7 @@ from mydiet.models import ExpertProfile
 from mydiet.models import UserAdvise
 from mydiet.models import BMI,BP,HB_FEMALE,HB_MALE,HDL,LDL,Tryglycerides,TotalCholestrol,FastingSugar,AfterFood
 from mydiet.models import Report
-from mydiet.models import UserChat
+from mydiet.models import Chat
 "-----------------------HomePages-------------------------------"
 def index(request):
     template = loader.get_template('index.html')
@@ -112,9 +113,9 @@ def login(request):
                 request.session['lastname'] = dblastname
                 return redirect('/expert_profile/?email=%s'% dbemail)
             elif dbemail == userid and dbpass == passw and dbstatus == 1  and dbentry == "Expert" :
-                return redirect('/expert_home/?email=%s'% dbemail)
+                return redirect('/expert_home/?expertemail=%s'% dbemail)
             elif dbemail == userid and dbpass == passw and dbstatus == 1  and dbentry == "Admin" :
-                return redirect('/admin_home/?email=%s'% dbemail)
+                return redirect('/admin_home/?expertemail=%s'% dbemail)
             else:
                 return render(request, 'Login.html')
     else:
@@ -206,16 +207,30 @@ def user_home(request):
 def user_dn(request):
     useremail = request.GET.get('email')
     userregister = Login.objects.filter(emailid=useremail).values()
-    stat = ''
+    reportstatus = ''
+    chatstatus = ''
     try:
-        userreport = Report.objects.get(emailid=useremail)
+        userreport = Report.objects.filter(emailid=useremail)
         print("UR = ",userreport)
-        status = userreport.status  # if status = 0 then preview history will be disabled
-        stat = status
+          # Checking if query exist or not
+        if userreport.count() == 0:
+            reportstatus = 0
+        else:
+            reportstatus = 1
     except Report.DoesNotExist:
-        stat = 0
+        pass
+    try:
+        chathistory = Chat.objects.filter(sender=useremail)
+        print("Chat History = ",chathistory)
+        # Checking if query exist or not
+        if chathistory.count() == 0:
+            chatstatus = 0
+        else:
+            chatstatus = 1
+    except Chat.DoesNotExist:
+        pass
     request.session['email'] = useremail # passing email so as to fetch history
-    return render(request, 'user_d & n.html', {'userdn' : userregister,'status' : stat})
+    return render(request, 'user_d & n.html', {'userdn' : userregister,'reportstatus' : reportstatus,'chatstatus' : chatstatus})
 
 def user_advise(request):
     if request.method == "POST":
@@ -541,6 +556,7 @@ def user_report(request):
     print(report)
     name = Login.objects.filter(emailid=useremail).values()
     return render(request, 'user_report.html', {'userreport' : report, 'name': name})
+
 def user_doctor(request):
     obj1 = Login.objects.filter(entry="Expert")
     length = len(obj1)
@@ -557,45 +573,71 @@ def user_doctor(request):
     print(type(mydict))
     context = {'expert': mydict}
     return render(request, 'user_doctor.html', context)
+
 def user_expertview(request):
     regno = request.GET.get('regno')
     print("Regno = ",regno)
     experts = ExpertProfile.objects.filter(registerno=regno).values()
     print("Experts = ",experts)
-    request.session['regnum'] = regno
+    request.session['regno'] = regno
     return render(request,'user_expertview.html',{'experts' : experts})
-def user_request(request):
-    regno = request.session['regnum'] #For filtering data
-    print("REG = ",regno)
-    mysess = request.session['email'] #Calling email from user home to fetch patient name and emailid
-    print("My session = ", mysess)
-    user = UserProfile.objects.get(emailid=mysess)
-    experts = ExpertProfile.objects.get(registerno=regno)
-    print("Experts = ", experts)
-    expobj = ExpertProfile.objects.filter(registerno=regno).values() #passing as context
-    if request.method == "POST":
-        if request.POST.get('chat'):
-            myform = UserChat()
-            "------------------Fetching user queries from User profile---------------------------"
-            myform.patientname = user.firstname + user.lastname
-            myform.patientemailid = user.emailid
-            "------------Text area field from html-----------------"
-            myform.question = request.POST.get('chat')
-            "------------------Fetching expert queries from Expert profile---------------------------"
-            myform.doctorname = experts.firstname + experts.lastname
-            myform.doctoremailid = experts.emailid
-            myform.status = 1
-            myform.save()
+
+def user_preview(request):
+    sender = request.session['email']
+    print("Sender = ", sender)  # Getting the email of the user
+    obj1 = Login.objects.get(emailid=sender)  # Fetching Name of user from Login table
+    print("obj1 = ", obj1)
+    sname = obj1.firstname + obj1.lastname
+
+    regno = request.session['regno']
+    print(regno)
+    obj2 = ExpertProfile.objects.get(registerno=regno)
+    print("OBJ2 = ", obj2)
+    receiver = obj2.emailid # Getting the email of the Expert
+    rname = obj2.firstname + obj2.lastname # Getting the Name of the Expert
+    try:
+        #select * from chat where (sender = "nikhilprakash95@gmail.com" and receiver = "drtinynair@gmail.com")
+        #  or (sender = "drtinynair@gmail.com" and receiver = "nikhilprakash95@gmail.com");
+        obj3 = Chat.objects.filter(Q(sender=sender,receiver=receiver)|Q(sender=receiver,receiver=sender))
+        print("Object = ", obj3)
+        if obj3.count() == 0:
+            status = 0
         else:
-            myform = UserChat()
-    return render(request,'user_chat.html',{'experts' : expobj})
+            status = 1
+    except Chat.DoesNotExist:
+        pass
+    print("Status = ",status)
+    #sessioning these to user_chat
+    request.session['sender'] = sender  # sender emailid
+    request.session['receiver'] = receiver  # receiver emailid
+    #passing Query object, Sender and Receiver email along with their names respectively and status
+    context = {'myobj' : obj3,'sender' : sender,'receiver' : receiver,'sname' : sname,'rname' : rname,'status' : status}
+    return render(request, 'userchat.html',context)
+
+def user_chat(request):
+    #sessions from user_preview...
+    sender = request.session['sender'] #sender emailid
+    receiver = request.session['receiver'] #receiver emailid
+    if request.method == 'POST':
+        msg = request.POST.get('msgbox', None)
+        form = Chat()
+        form.sender = sender
+        form.receiver = receiver
+        form.message = request.POST.get('chat-msg')
+        form.status = 1
+        form.save()
+        return redirect('/user_preview')
+    else:
+        form = Chat()
+        return render(request,'userchat.html')
+
 def user_articles(request):
     useremail = request.GET.get('email')
     userregister = Login.objects.filter(emailid=useremail).values()
     return render(request, 'user_articles.html', {'userarticle': userregister})
 
 def expert_home(request):
-    useremail = request.GET.get('email')
+    useremail = request.GET.get('expertemail')
     print("useremail = ", useremail)
     userregister = Login.objects.filter(emailid=useremail).values()
     print(userregister)
@@ -603,7 +645,7 @@ def expert_home(request):
     print(expertprofile)
     return render(request, 'experts_home.html', {'experthomepage': userregister, 'expertprofile': expertprofile})
 def expert_doctor(request):
-    useremail = request.GET.get('email')
+    useremail = request.GET.get('expertemail')
     expertregister = Login.objects.filter(emailid=useremail).values()
     obj1 = Login.objects.filter(entry="Expert")
     length = len(obj1)
@@ -621,20 +663,87 @@ def expert_doctor(request):
     context = {'expert': mydict,'expertdoctor': expertregister}
     return render(request, 'experts_doctor.html',context)
 def expert_dn(request):
-    useremail = request.GET.get('email')
+    useremail = request.GET.get('expertemail')
     expertregister = Login.objects.filter(emailid=useremail).values()
-    return render(request, 'experts_d and n.html', {'expertdn': expertregister}, )
+    try:
+        obj1 = Chat.objects.filter(receiver=useremail,status=1)
+        if obj1.count() == 0:
+            stat = 0
+        else:
+            stat = 1
+    except Chat.DoesNotExist:
+        pass
+    return render(request, 'experts_d and n.html', {'expertdn': expertregister,'status' : stat}, )
+
+def expert_viewreq(request):
+    useremail = request.GET.get('expertemail')
+    print("Useremail = ",useremail)
+    expertregister = Login.objects.filter(emailid=useremail).values()
+    try:
+        obj1 = Chat.objects.filter(receiver=useremail,status=1)
+        print(obj1)
+        sender = obj1[0].sender
+        print("S = ",sender)
+        receiver = obj1[0].receiver
+    except Chat.DoesNotExist:
+        pass
+    request.session['expertemail'] = useremail #Email of Expert
+    request.session['sender'] = sender # Email of User
+    context = {'expertview': expertregister,'myobj' : obj1,'receiver' : receiver}
+    return render(request, 'experts_viewreq.html',context )
+
+def expert_preview(request):
+    sender = request.session['expertemail']
+    print("Sender = ", sender)  # Getting the email of the sender(Expert)
+    obj1 = ExpertProfile.objects.get(emailid=sender)  # Fetching Name of Expert from Expert table
+    print("obj1 = ", obj1)
+    sname = obj1.firstname + obj1.lastname
+    print("Sname = ",sname)
+
+    receiver = request.session['sender'] # Getting the email of the Receiver(user)
+    print("R = ", receiver)
+    obj2 = Login.objects.get(emailid=receiver)  # Fetching Name of User from Login table
+    print("OBJ2 = ", obj2)
+    rname = obj2.firstname + obj2.lastname
+    print("Rname = ",rname)
+    try:
+        #select * from chat where (sender = "drtinynair@gmail.com" or receiver = "drtinynair@gmail.com");
+        obj3 = Chat.objects.filter(Q(sender=sender) | Q(receiver=sender))
+        print("Object = ", obj3)
+        if obj3.count() == 0:
+            status = 0
+        else:
+            status = 1
+    except Chat.DoesNotExist:
+        pass
+    print("Status = ", status)
+    # sessioning these to user_chat
+    request.session['expert'] = sender  # Expert emailid
+    request.session['user'] = receiver  # User emailid
+    # passing Query object, Sender and Receiver email along with their names respectively and status
+    context = {'myobj': obj3, 'sender': sender, 'receiver': receiver, 'sname': sname, 'rname': rname, 'status': status}
+    return render(request, 'expertchat.html', context)
+
+def expert_chat(request):
+    sender = request.session['expert']
+    receiver = request.session['user']
+    if request.method == 'POST':
+        msg = request.POST.get('msgbox', None)
+        form = Chat()
+        form.sender = sender
+        form.receiver = receiver
+        form.message = request.POST.get('chat-msg')
+        form.status = 1
+        form.save()
+        return redirect('/expert_preview')
+    else:
+        form = Chat()
+        return render(request, 'expertchat.html')
+
 def expert_articles(request):
-    useremail = request.GET.get('email')
+    useremail = request.GET.get('expertemail')
     expertregister = Login.objects.filter(emailid=useremail).values()
     return render(request, 'experts_articles.html', {'expertarticle': expertregister}, )
-def expert_viewreq(request):
-    useremail = request.GET.get('email')
-    expertregister = Login.objects.filter(emailid=useremail).values()
-    return render(request, 'experts_viewreq.html', {'expertview': expertregister}, )
-def expert_reply(request):
-    template = loader.get_template('experts_reply.html')
-    return HttpResponse(template.render())
 
 "------------------ADMIN PAGES----------------------------------"
 def admin_home(request):

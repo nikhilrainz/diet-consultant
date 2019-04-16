@@ -93,13 +93,13 @@
 			<table class="table">
 				<tr>
 					<th>Emailid</th>
-					<th>message</th>
+					<th>Message</th>
 					<th>Action</th>
 				</tr>
-                {% for obj in myobj %}
+                {% for i in myobj %}
                     <tr>
-                        <td>{{obj.sender}}</td>
-                        <td>{{obj.message}}</td>
+                        <td>{{i.sender}}</td>
+                        <td>{{i.message}}</td>
                         <td><a href="/expert_preview" class="btn-link">Reply</a></td>
                     </tr>
                 {% endfor %}

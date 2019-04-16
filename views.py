@@ -1,5 +1,5 @@
 from django.shortcuts import render,HttpResponse,redirect,loader,get_object_or_404
-from django.db.models import Q
+from django.db.models import Q,Max,Count,query,Sum
 from django.contrib import messages
 from django import forms
 from datetime import datetime,date,time
@@ -194,6 +194,7 @@ def expert_profile(request):
     return render(request, 'expert_profile.html')
 
 "-----------------------Login Profiles-------------------------------"
+"******** HOME PAGE OF USER ********"
 def user_home(request):
     useremail = request.GET.get('email')
     print("useremail = ",useremail)
@@ -204,6 +205,7 @@ def user_home(request):
     print(userprofile)
     return render(request, 'user_home.html', {'userhomepage': userregister,'userprofile' : userprofile},)
 
+"******** DIET AND NUTRITION PAGE FOR USER ********"
 def user_dn(request):
     useremail = request.GET.get('email')
     userregister = Login.objects.filter(emailid=useremail).values()
@@ -232,6 +234,7 @@ def user_dn(request):
     request.session['email'] = useremail # passing email so as to fetch history
     return render(request, 'user_d & n.html', {'userdn' : userregister,'reportstatus' : reportstatus,'chatstatus' : chatstatus})
 
+"******** COMPLETE HEALTH PROFILE OF USER ********"
 def user_advise(request):
     if request.method == "POST":
         if request.POST.get('emailid') and request.POST.get('height') and request.POST.get('weight') and request.POST.get('hb') and request.POST.get('systolic') and request.POST.get('dystolic') and request.POST.get('fasting sugar') and request.POST.get('after food') and request.POST.get('hdl') and request.POST.get('ldl') and request.POST.get('try') and request.POST.get('total') and request.POST.get('heartdiseases') and request.POST.get('sedentary') and request.POST.get('breakfast') and request.POST.get('lunch') and request.POST.get('snacks') and request.POST.get('dinner'):
@@ -289,6 +292,7 @@ def user_advise(request):
             return HttpResponse("Fill all fields")
     return render(request, 'user_advise.html')
 
+"******** STANDARD RESULT OF USER ********"
 def user_result(request):
     userid = request.GET.get('id')
     print(userid)
@@ -549,6 +553,7 @@ def user_result(request):
     request.session['email'] = useremail
     return render(request, 'user_result.html',Context)
 
+"******** HEALTH REPORT OF USER ********"
 def user_report(request):
     useremail = request.session['email']
     print("my email = ",useremail)
@@ -557,6 +562,7 @@ def user_report(request):
     name = Login.objects.filter(emailid=useremail).values()
     return render(request, 'user_report.html', {'userreport' : report, 'name': name})
 
+"******** LIST OF AVAILABLE DOCTORS FOR THE USER ********"
 def user_doctor(request):
     obj1 = Login.objects.filter(entry="Expert")
     length = len(obj1)
@@ -574,6 +580,7 @@ def user_doctor(request):
     context = {'expert': mydict}
     return render(request, 'user_doctor.html', context)
 
+"******** VIEW DOCTOR PROFILE FOR USER ********"
 def user_expertview(request):
     regno = request.GET.get('regno')
     print("Regno = ",regno)
@@ -582,6 +589,7 @@ def user_expertview(request):
     request.session['regno'] = regno
     return render(request,'user_expertview.html',{'experts' : experts})
 
+"******** CHAT PREVIEW FOR USER ********"
 def user_preview(request):
     sender = request.session['email']
     print("Sender = ", sender)  # Getting the email of the user
@@ -614,6 +622,7 @@ def user_preview(request):
     context = {'myobj' : obj3,'sender' : sender,'receiver' : receiver,'sname' : sname,'rname' : rname,'status' : status}
     return render(request, 'userchat.html',context)
 
+"******** SENDING & DB SAVING CHAT MESSAGE OF THE USER ********"
 def user_chat(request):
     #sessions from user_preview...
     sender = request.session['sender'] #sender emailid
@@ -629,13 +638,75 @@ def user_chat(request):
         return redirect('/user_preview')
     else:
         form = Chat()
-        return render(request,'userchat.html')
+        return render(request,'user_chat.html')
 
+"******** CHAT CONVERSATION HEAD FOR THE USER ********"
+def user_chathistory(request):
+    useremail = request.session['email']
+    obj1 = Chat.objects.values('receiver').filter(sender=useremail)
+    print(obj1.query)
+    return render(request,'user_chathistory.html',{'myobj' :obj1})
+
+"******** CHAT HISTORY PREVIEW OF USER ********"
+def user_chatpreview(request):
+    sender = request.session['email'] #user email
+    obj1 = Login.objects.get(emailid=sender)  # Fetching Name of user from Login table
+    print("obj1 = ", obj1)
+    sname = obj1.firstname + obj1.lastname
+
+    receiver = request.GET.get('emailid')  # expert email
+    print("Rec = ",receiver)
+    obj2 = ExpertProfile.objects.get(emailid=receiver)
+    print("OBJ2 = ", obj2)
+    rname = obj2.firstname + obj2.lastname  # Getting the Name of the Expert
+    try:
+        #select * from chat where (sender = "nikhilprakash95@gmail.com" and receiver = "drtinynair@gmail.com")
+        #  or (sender = "drtinynair@gmail.com" and receiver = "nikhilprakash95@gmail.com");
+        obj3 = Chat.objects.filter(Q(sender=sender,receiver=receiver)|Q(sender=receiver,receiver=sender))
+        print("Object = ", obj3)
+        if obj3.count() == 0:
+            status = 0
+        else:
+            status = 1
+    except Chat.DoesNotExist:
+        pass
+    print("Status = ",status)
+    #sessioning these to user_chat
+    request.session['user'] = sender  # sender emailid
+    request.session['expert'] = receiver  # receiver emailid
+    #passing Query object, Sender and Receiver email along with their names respectively and status
+    context = {'myobj' : obj3,'sender' : sender,'receiver' : receiver,'sname' : sname,'rname' : rname,'status' : status}
+    return render(request, 'user_chatpreview.html',context)
+
+"******** SENDING CHAT MESSAGES VIA CHAT HISTORY OF THE USER ********"
+def user_chatp(request):
+    sender = request.session['user']  # sender emailid
+    receiver = request.session['expert']  # receiver emailid
+    if request.method == 'POST':
+        msg = request.POST.get('msgbox', None)
+        form = Chat()
+        form.sender = sender
+        form.receiver = receiver
+        form.message = request.POST.get('chat-msg')
+        form.status = 1
+        form.save()
+        return redirect('/user_chatpreview/?emailid=%s'%receiver)
+    else:
+        form = Chat()
+        return render(request, 'user_chatpreview.html')
+
+"******** FRAMESET OF CHAT WINDOWS ********"
+def chatpreview(request):
+    template = loader.get_template('chatpreview.html')
+    return HttpResponse(template.render())
+
+"******** VIEWING ARTICLE OF EXPERTS FOR THE USER ********"
 def user_articles(request):
     useremail = request.GET.get('email')
     userregister = Login.objects.filter(emailid=useremail).values()
     return render(request, 'user_articles.html', {'userarticle': userregister})
 
+"******** HOME PAGE OF EXPERT ********"
 def expert_home(request):
     useremail = request.GET.get('expertemail')
     print("useremail = ", useremail)
@@ -644,6 +715,8 @@ def expert_home(request):
     expertprofile = ExpertProfile.objects.filter(emailid=useremail).values()
     print(expertprofile)
     return render(request, 'experts_home.html', {'experthomepage': userregister, 'expertprofile': expertprofile})
+
+"******** VIEWING DOCTOR LIST FOR EXPERT ********"
 def expert_doctor(request):
     useremail = request.GET.get('expertemail')
     expertregister = Login.objects.filter(emailid=useremail).values()
@@ -662,6 +735,8 @@ def expert_doctor(request):
     print(type(mydict))
     context = {'expert': mydict,'expertdoctor': expertregister}
     return render(request, 'experts_doctor.html',context)
+
+"******** PAGE TO VIEW REQUEST FROM USER(IF AVAILABLE) ********"
 def expert_dn(request):
     useremail = request.GET.get('expertemail')
     expertregister = Login.objects.filter(emailid=useremail).values()
@@ -675,23 +750,35 @@ def expert_dn(request):
         pass
     return render(request, 'experts_d and n.html', {'expertdn': expertregister,'status' : stat}, )
 
+"******** VIEWING CHAT REQUEST FROM USER(CHAT CONVERSATION HEAD) ********"
 def expert_viewreq(request):
     useremail = request.GET.get('expertemail')
     print("Useremail = ",useremail)
     expertregister = Login.objects.filter(emailid=useremail).values()
+    # select distinct(sender) from chat where receiver="drtinynair@gmail.com";
+    obj1 = Chat.objects.values_list('sender', flat=True).filter(receiver=useremail).distinct()
+    print("obj1 = ", obj1)
+    #SENDER IS NOT CORRECT
+    sender = obj1[0]
+    print("S = ", sender)
     try:
-        obj1 = Chat.objects.filter(receiver=useremail,status=1)
-        print(obj1)
-        sender = obj1[0].sender
-        print("S = ",sender)
-        receiver = obj1[0].receiver
+        obj2 = Chat.objects.values('sender').filter(receiver=useremail) #Listing out conversation head of users
+        print(obj2.query)
+        receiver = useremail
+        print("R = ",receiver)
+        #UPDATING LATEST MESSAGES OF EACH USERS....
+        obj3 = Chat.objects.all()
+        latest = obj3.values('id','sender','receiver','message').annotate(count=Max('id'))
+        obj3 = obj3.filter(id__in = latest.values('count'),receiver=useremail).order_by('-id')
+        print("Object 2 = ",obj3.query)
     except Chat.DoesNotExist:
         pass
     request.session['expertemail'] = useremail #Email of Expert
-    request.session['sender'] = sender # Email of User
-    context = {'expertview': expertregister,'myobj' : obj1,'receiver' : receiver}
+    request.session['sender'] = sender # Email of User"
+    context = {'expertview': expertregister,'myobj' : obj3,'receiver' : receiver}
     return render(request, 'experts_viewreq.html',context )
 
+"******** CHAT HISTORY OF EXPERT ********"
 def expert_preview(request):
     sender = request.session['expertemail']
     print("Sender = ", sender)  # Getting the email of the sender(Expert)
@@ -707,8 +794,9 @@ def expert_preview(request):
     rname = obj2.firstname + obj2.lastname
     print("Rname = ",rname)
     try:
-        #select * from chat where (sender = "drtinynair@gmail.com" or receiver = "drtinynair@gmail.com");
-        obj3 = Chat.objects.filter(Q(sender=sender) | Q(receiver=sender))
+        #select * from chat where (sender = "drtinynair@gmail.com" and receiver = "nikhilprakash95@gmail.com")
+        #  or (sender = "nikhilprakash95@gmail.com" and receiver = "drtinynair@gmail.com");
+        obj3 = Chat.objects.filter(Q(sender=sender, receiver=receiver) | Q(sender=receiver, receiver=sender))
         print("Object = ", obj3)
         if obj3.count() == 0:
             status = 0
@@ -724,6 +812,7 @@ def expert_preview(request):
     context = {'myobj': obj3, 'sender': sender, 'receiver': receiver, 'sname': sname, 'rname': rname, 'status': status}
     return render(request, 'expertchat.html', context)
 
+"******** SENDING CHAT MESSAGES AND DB SAVING FROM EXPERT ********"
 def expert_chat(request):
     sender = request.session['expert']
     receiver = request.session['user']
@@ -740,24 +829,34 @@ def expert_chat(request):
         form = Chat()
         return render(request, 'expertchat.html')
 
+"******** UPLOADING ARTICLES FOR EXPERT ********"
 def expert_articles(request):
     useremail = request.GET.get('expertemail')
     expertregister = Login.objects.filter(emailid=useremail).values()
     return render(request, 'experts_articles.html', {'expertarticle': expertregister}, )
 
 "------------------ADMIN PAGES----------------------------------"
+"******** HOMEPAGE OF ADMIN ********"
 def admin_home(request):
     template = loader.get_template('admin_home.html')
     return HttpResponse(template.render())
+
+"******** VIEWING REGISTERED USER ********"
 def admin_user(request):
     template = loader.get_template('admin_user.html')
     return HttpResponse(template.render())
+
+"******** VIEWING PROFILE OF REGISTERED USER ********"
 def admin_userview(request):
     template = loader.get_template('admin_userview.html')
     return HttpResponse(template.render())
+
+"******** VIEWING REGISTERED EXPERTS ********"
 def admin_doctor(request):
     template = loader.get_template('admin_doctor.html')
     return HttpResponse(template.render())
+
+"******** VIEWING PROFILE OF REGISTERED EXPERT ********"
 def admin_viewexpert(request):
     template = loader.get_template('admin_viewexpert.html')
     return HttpResponse(template.render())

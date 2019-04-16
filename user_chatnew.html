@@ -1,0 +1,42 @@
+<html>
+<head>
+    <title>Chat Panel</title>
+    {% load staticfiles %}
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/chat.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div id="chat-body" class="panel panel-default">
+        <div class="panel-heading">Chat Box </div>
+            <div id="msg-list-div" class="panel-body">
+                <ul id="msg-list" class="list-group">
+                    <span style="color:blue;">{{rname}}<span style="float:right">{{sname}}</span></span>
+                    {% if status == 1 %}
+                        {% for obj in myobj %}
+                            {% if obj.sender == sender %}
+                                <li class="text-right list-group-item"style="color:blue;">{{obj.message}}</li>
+                            {% else %}
+                                <li class="text-left list-group-item">{{obj.message}}</li>
+                            {% endif %}
+                        {% empty %}
+                            <li class="text-left list-group-item">No messages Yet!</li>
+                        {% endfor %}
+                    {% else %}
+                        <li class="text-left list-group-item">No messages Yet!!</li>
+                    {% endif %}
+                    <script>
+                        var chatlist = document.getElementById('msg-list-div');
+                        chatlist.scrollTop = chatlist.scrollHeight;
+                     </script>
+                </ul>
+            </div>
+    </div>
+</body>
+</html>

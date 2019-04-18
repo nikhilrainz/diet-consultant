@@ -643,7 +643,9 @@ def user_chat(request):
 "******** CHAT CONVERSATION HEAD FOR THE USER ********"
 def user_chathistory(request):
     useremail = request.session['email']
-    obj1 = Chat.objects.values('receiver').filter(sender=useremail)
+    # select receiver from chat where sender = "nikhilprakash95@gmail.com" GROUP BY receiver;
+    #obj1 = Chat.objects.values('receiver').filter(sender=useremail)
+    obj1 = Chat.objects.filter(sender=useremail).values('receiver').annotate(rec = Count('receiver'))
     print(obj1.query)
     return render(request,'user_chathistory.html',{'myobj' :obj1})
 
@@ -755,27 +757,42 @@ def expert_viewreq(request):
     useremail = request.GET.get('expertemail')
     print("Useremail = ",useremail)
     expertregister = Login.objects.filter(emailid=useremail).values()
+    # Listing out conversation head and latest message of users
+    #select * from chat where id IN(select max(id) from chat where receiver = "drtinynair@gmail.com" GROUP BY sender) GROUP BY ID DESC;
+
+
+
     # select distinct(sender) from chat where receiver="drtinynair@gmail.com";
     obj1 = Chat.objects.values_list('sender', flat=True).filter(receiver=useremail).distinct()
     print("obj1 = ", obj1)
+    print("obj1 Query = ", obj1.query)
     #SENDER IS NOT CORRECT
     sender = obj1[0]
     print("S = ", sender)
     try:
-        obj2 = Chat.objects.values('sender').filter(receiver=useremail) #Listing out conversation head of users
-        print(obj2.query)
+        #select sender from chat where receiver = "drtinynair@gmail.com" GROUP BY sender;
+        #obj2 = Chat.objects.filter(receiver=useremail).values('sender','message').annotate(sen=Count('sender'))
+        #print(obj2.query)
+        #sender = obj2[0]
+        #print("S = ", sender)
         receiver = useremail
         print("R = ",receiver)
         #UPDATING LATEST MESSAGES OF EACH USERS....
         obj3 = Chat.objects.all()
-        latest = obj3.values('id','sender','receiver','message').annotate(count=Max('id'))
-        obj3 = obj3.filter(id__in = latest.values('count'),receiver=useremail).order_by('-id')
-        print("Object 2 = ",obj3.query)
+        # select id,sender,message from chat where id IN(select max(id) from chat GROUP BY sender)
+        #  and receiver ="drtinynair@gmail.com" GROUP BY ID DESC
+        latest = obj3.filter(receiver=useremail).annotate(count=Max('id'))
+        print("latest = ",latest.query)
+        obj3 = obj3.filter(id__in = latest.values('count')).order_by('-id')
+        print("Object 2 = ",obj3)
+        print("Object 2 QUERY = ", obj3.query)
+        myobj = zip(obj1,obj3)
+        print(myobj)
     except Chat.DoesNotExist:
         pass
     request.session['expertemail'] = useremail #Email of Expert
     request.session['sender'] = sender # Email of User"
-    context = {'expertview': expertregister,'myobj' : obj3,'receiver' : receiver}
+    context = {'expertview': expertregister,'myobj' : myobj,'receiver' : receiver}
     return render(request, 'experts_viewreq.html',context )
 
 "******** CHAT HISTORY OF EXPERT ********"

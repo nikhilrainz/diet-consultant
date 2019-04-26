@@ -140,7 +140,10 @@
 
   <section class="ftco-section cls" id="change" style="margin-left: 5%;">
     <div class="container">
-    <form method="POST" class="post-form" action="/user_home">
+
+    <form method="POST" class="post-form" action="/userchangepass/">
+      {% csrf_token %}
+      <span style="color:green;">{{success}}</span>
       <h2>Change Password</h2>
         <table class="table">
       {% for employee in userhomepage %}
@@ -151,19 +154,20 @@
       {% endfor %}
         <tr>
           <th>New Password</th>
-          <td><input type="password" name="newpass" placeholder="Enter your New Password" style="width: 35%;">
+          <td><input type="password" name="newpass" placeholder="Enter your New Password" required style="width: 35%;">
               <!--{{employee.password}}-->
           </td>
         </tr>
         <tr>  
           <th>Confirm Password</th>
-          <td><input type="password" name="cnfpass" placeholder="Re-enter new password" style="width: 35%;">
+          <td><input type="password" name="cnfpass" placeholder="Re-enter new password" required style="width: 35%;">
               <!--{{employee.confirmpassword}}-->
           </td>
         </tr>
         <tr>
-          <td class="button-custom order-lg-last mb-0 btn btn-success py-2 px-3" align="center">Update Password</td>
+          <td align="center"><button type="submit">Update Password</button></td>
         </tr>
+          <span style="color:red;">{{error}}</span>
       </table>
     </form>
     </div>

@@ -12,6 +12,8 @@ class Login(models.Model):
         db_table = "login"
 
 class UserProfile(models.Model):
+    firstname = models.CharField(max_length=50, null=True)
+    lastname = models.CharField(max_length=50, null=True)
     emailid = models.EmailField(max_length=50,primary_key=True)
     dob = models.CharField(max_length=25)
     gender = models.CharField(max_length=25)
@@ -19,11 +21,14 @@ class UserProfile(models.Model):
     phone = models.CharField(max_length=25)
     qualification = models.CharField(max_length=25)
     profession = models.CharField(max_length=25)
+    profilepic = models.FileField(upload_to='user/', null=True)
 
     class Meta:
         db_table = "user_register"
 
 class ExpertProfile(models.Model):
+    firstname = models.CharField(max_length=50, null=True)
+    lastname = models.CharField(max_length=50, null=True)
     emailid = models.EmailField(max_length=50,primary_key=True)
     dob = models.CharField(max_length=25)
     gender = models.CharField(max_length=25)
@@ -33,7 +38,9 @@ class ExpertProfile(models.Model):
     registerno = models.CharField(max_length=25)
     yearofreg = models.CharField(max_length=25)
     experience = models.CharField(max_length=25)
-
+    profilepic = models.FileField(upload_to='expert/', null=True)
+    profstatement = models.TextField(null=True)
+    languageknown = models.CharField(max_length=50,null=True)
     class Meta:
         db_table = "expert_register"
 
@@ -149,3 +156,48 @@ class AfterFood(models.Model):
 
     class Meta:
         db_table = "AfterFood"
+
+class Report(models.Model):
+    emailid = models.EmailField(max_length=50)
+    bmi = models.CharField(max_length=50)
+    bp = models.CharField(max_length=50)
+    hb = models.CharField(max_length=50)
+    sugar = models.CharField(max_length=50)
+    afterfood = models.CharField(max_length=50)
+    hdl = models.CharField(max_length=50)
+    ldl = models.CharField(max_length=50)
+    tryglycerine = models.CharField(max_length=50)
+    totcholestrol = models.CharField(max_length=50)
+    sedentary = models.CharField(max_length=50)
+    heart = models.CharField(max_length=50)
+    breakfast = models.CharField(max_length=50)
+    lunch = models.CharField(max_length=50)
+    snacks = models.CharField(max_length=50)
+    dinner = models.CharField(max_length=50)
+    date = models.CharField(max_length=50)
+    time = models.CharField(max_length=50)
+    status = models.IntegerField(default=0)
+    
+    class Meta:
+        db_table = "user_report"
+
+class Chat(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    sender = models.EmailField(max_length=50)
+    receiver = models.EmailField(max_length=50)
+    message = models.TextField()
+    status = models.IntegerField(default=0)
+    is_replyed = models.BooleanField(default=False)
+    expert_read_status = models.BooleanField(default=False)
+    user_read_status = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = "chat"
+
+class Feedback(models.Model):
+    emailid = models.EmailField(max_length=50)
+    profilepic = models.FileField(upload_to='user/', null=True)
+    comment = models.TextField()
+
+    class Meta:
+        db_table = "feedback"

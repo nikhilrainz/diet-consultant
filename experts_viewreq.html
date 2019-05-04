@@ -69,13 +69,12 @@
               <li class="nav-item"><a href="/expert_home/?expertemail={{employees.emailid}}" class="nav-link pl-0">Home</a></li>
               <li class="nav-item"><a href="/expert_doctor/?expertemail={{employees.emailid}}" class="nav-link">Experts</a></li>
               <li class="nav-item active"><a href="/expert_dn/?expertemail={{employees.emailid}}" class="nav-link">Diet and Nutrition</a></li>
-              <li class="nav-item"><a href="/expert_articles/?expertemail={{employees.emailid}}" class="nav-link">Articles</a></li>
             {% endfor %}
           </ul>
         </div>
       </div>
     </nav>
-    <div class="navbar-collapse" id="ftco-nav">
+    <!--<div class="navbar-collapse" id="ftco-nav">
       <div class="sidebar">
         <ul class="navbar-nav mr-auto">
           {% for employees in expertview %}
@@ -84,7 +83,7 @@
 			{% endfor %}
         </ul>
       </div>
-    </div>
+    </div>-->
     <!-- END nav -->
 <section class="ftco-section" style="margin-left: 5%">
 	<div class="container">
@@ -92,15 +91,23 @@
 		<div class="table table-striped ">
 			<table class="table">
 				<tr>
-					<th>Emailid</th>
+					<th>Name</th>
 					<th>Message</th>
+                    <th>Date/Time</th>
 					<th>Action</th>
+                    <th>Report</th>
 				</tr>
                 {% for i in myobj %}
                     <tr>
-                        <td>{{i.sender}}</td>
-                        <td>{{i.message}}</td>
-                        <td><a href="/expert_preview" class="btn-link">Reply</a></td>
+                        <td>{{i.name}}</td>
+                        {% if i.msg.is_replyed %}
+                          <td>{{i.msg.message|slice:":50"}}</td>
+                        {% else %}
+                          <td><b>{{i.msg.message|slice:":50"}}</b></td>
+                        {% endif %}
+                        <td>{{i.msg.created}}</td>
+                        <td><a href="/expertpreview1/?receiver={{i.msg.sender}}" class="btn-link" target="_blank">Reply</a></td>
+                        <td><a href="/expert_viewreport/?sender={{i.msg.sender}}" class="btn-link" target="_blank">Report</a></td>
                     </tr>
                 {% endfor %}
 			</table>
@@ -110,7 +117,6 @@
 
 <!-- loader -->
   <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
-
 
   <script src="../static/js/jquery.min.js"></script>
   <script src="../static/js/jquery-migrate-3.0.1.min.js"></script>

@@ -76,6 +76,7 @@
             <li class="nav-item active"><a href="/user_home/?email={{employee.emailid}}" class="nav-link pl-0">Home</a></li>
             <li class="nav-item"><a href="/user_dn/?email={{employee.emailid}}" class="nav-link">Diet and Nutrition</a></li>
             <li class="nav-item"><a href="/user_articles/?email={{employee.emailid}}" class="nav-link">Articles</a></li>
+            <li class="nav-item"><a href="/user_feedback/?email={{employee.emailid}}" class="nav-link">Feedback</a></li>
             {% endfor %}
           </ul>
         </div>
@@ -90,13 +91,14 @@
         </ul>
       </div>
     </div>
-    
+
     <!-- END nav -->
     <section class="ftco-section cls" id="profile" style="margin-left: 5%;">
       <div class="container">
         <h2>Basic Profile</h2>
         {% for employee in userprofile %}
           <table class="table">
+            <span style="float:right"><a href="/edit/{{employee.emailid}}">Edit Profile</a> </span>
             <tr>
               <th>Profile Picture</th>
               <td><img src="{{ MEDIA_URL }}{{ employee.profilepic }}" width="120px" height="120px"></td>
@@ -140,13 +142,13 @@
 
   <section class="ftco-section cls" id="change" style="margin-left: 5%;">
     <div class="container">
-
-    <form method="POST" class="post-form" action="/userchangepass/">
+    {% for employee in userhomepage %}
+    <form method="POST" class="post-form" action="/userchangepass/?email={{employee.emailid}}" onsubmit="return valid()">
       {% csrf_token %}
-      <span style="color:green;">{{success}}</span>
+
       <h2>Change Password</h2>
         <table class="table">
-      {% for employee in userhomepage %}
+
         <tr>
           <th>Email Id</th>
           <td>{{employee.emailid}}</td>
@@ -161,13 +163,12 @@
         <tr>  
           <th>Confirm Password</th>
           <td><input type="password" name="cnfpass" placeholder="Re-enter new password" required style="width: 35%;">
-              <!--{{employee.confirmpassword}}-->
+             <p id="result"></p>
           </td>
         </tr>
         <tr>
           <td align="center"><button type="submit">Update Password</button></td>
         </tr>
-          <span style="color:red;">{{error}}</span>
       </table>
     </form>
     </div>
@@ -187,8 +188,27 @@
             
             document.getElementById(pageName).style.display = "block";
         }
+   </script>
+    <script type="text/javascript">
+        function valid(){
+			var npass=document.getElementById("newpass").value;
+			var cpass=document.getElementById("cnfpass").value;
 
-  </script>
+			if((npass!=cpass)){
+				document.getElementById("newpass").value="";
+				document.getElementById("cnfpass").value="";
+
+				document.getElementById("result").style.color="red";
+				document.getElementById("result").innerHTML="Check password";
+				return false;
+			}
+			else
+			{
+
+				return true;
+			}
+		}
+    </script>
 
   <script src="../static/js/jquery.min.js"></script>
   <script src="../static/js/jquery-migrate-3.0.1.min.js"></script>

@@ -15,15 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from mydiet import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-path('index/', views.index),
+    path('', views.index),
+    path('index/', views.index),
     path('expert/', views.expert),
     path('dietandnutrition/', views.dietandnutrition),
     path('article/', views.article),
-    path('contact/', views.contact),
+    path('reviews/', views.reviews),
 
     path('userreg/', views.user_register),
     path('expert_register/', views.expert_register),
@@ -31,22 +34,39 @@ path('index/', views.index),
 
     path('user_profile/', views.user_profile),
     path('user_home/', views.user_home),
+    path('userchangepass/',views.userchangepass),
+    path('edit/<email>', views.edit),
+    path('update/<email>', views.update),
     path('user_dn/', views.user_dn),
     path('user_advise/', views.user_advise),
     path('user_result/', views.user_result),
+    path('user_report/', views.user_report),
+    path('user_doctor/', views.user_doctor),
+    path('user_expertview/', views.user_expertview),
+    path('userpost/', views.userpost),
+    path('userpreview1/', views.userpreview_1),
+    path('get-userchat-msg/', views.get_userchat_msg),
+    path('chatpreview/',views.chatpreview),
+    path('user_chathistory/',views.user_chathistory),
+    path('user_chatpreview/', views.user_chatpreview),
+    path('user_chatp/', views.user_chatp),
     path('user_articles/', views.user_articles),
+    path('user_feedback/', views.user_feedback),
 
     path('expert_home/', views.expert_home),
     path('expert_profile/', views.expert_profile),
+    path('editprofile/<email>', views.editprofile),
+    path('update_expert/<email>', views.update_expert),
     path('expert_doctor/', views.expert_doctor),
     path('expert_dn/', views.expert_dn),
     path('expert_articles/', views.expert_articles),
+    path('expertpost/', views.expertpost),
     path('expert_viewreq/', views.expert_viewreq),
-    path('expert_reply/', views.expert_reply),
-
+    path('expertpreview1/', views.expertpreview_1),
+    path('get-chat-msg/', views.get_chat_msg),
+    path('expert_chat/', views.expertpost),
+    path('expert_viewreport/', views.expert_viewreport),
     path('admin_home/', views.admin_home),
     path('admin_user/', views.admin_user),
-    path('admin_userview/', views.admin_userview),
     path('admin_doctor/', views.admin_doctor),
-    path('admin_viewexpert/', views.admin_viewexpert)
-]
+]+ static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)

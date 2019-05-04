@@ -69,22 +69,11 @@
               <li class="nav-item active"><a href="/expert_home/?email={{employees.emailid}}" class="nav-link pl-0">Home</a></li>
               <li class="nav-item"><a href="/expert_doctor/?email={{employees.emailid}}" class="nav-link">Experts</a></li>
               <li class="nav-item active"><a href="/expert_dn/?email={{employees.emailid}}" class="nav-link">Diet and Nutrition</a></li>
-              <li class="nav-item"><a href="/expert_articles/?email={{employees.emailid}}" class="nav-link">Articles</a></li>
             {% endfor %}
           </ul>
         </div>
       </div>
     </nav>
-    <div class="navbar-collapse" id="ftco-nav">
-      <div class="sidebar">
-        <ul class="navbar-nav mr-auto">
-          {% for employees in expertdn %}
-          <li class="nav-item active"><a href="/expert_home/?expertemail={{employees.emailid}}"><i class="flaticon-doctor"></i> View Profile</a></li>
-          <li class="nav-item active"><a href="/expert_home/?expertemail={{employees.emailid}}"><i class="flaticon-experiment-results"></i> Change Password</a></li>
-			{% endfor %}
-        </ul>
-      </div>
-    </div>
     <!-- END nav -->
     
     <section class="ftco-section" style="margin-left: 5%">

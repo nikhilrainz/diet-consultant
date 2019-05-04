@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponse,redirect,loader,get_object_or_404
+from django.shortcuts import render,HttpResponse,HttpResponseRedirect,redirect,loader,get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.db.models import Q,Max,Count,query,Sum
@@ -11,7 +11,7 @@ from mydiet.models import ExpertProfile
 from mydiet.models import UserAdvise
 from mydiet.models import BMI,BP,HB_FEMALE,HB_MALE,HDL,LDL,Tryglycerides,TotalCholestrol,FastingSugar,AfterFood
 from mydiet.models import Report
-from mydiet.models import Chat
+from mydiet.models import Chat,Feedback
 "-----------------------HomePages-------------------------------"
 def index(request):
     template = loader.get_template('index.html')
@@ -38,9 +38,9 @@ def dietandnutrition(request):
 def article(request):
     template = loader.get_template('article.html')
     return HttpResponse(template.render())
-def contact(request):
-    template = loader.get_template('contact.html')
-    return HttpResponse(template.render())
+def reviews(request):
+    obj1 = Feedback.objects.all()
+    return render(request,'review.html',{'review' : obj1})
 
 "-----------------------Login and Register-------------------------------"
 def user_register(request):
@@ -205,7 +205,7 @@ def user_home(request):
     print(userregister)
     userprofile = UserProfile.objects.filter(emailid = useremail).values()
     print(userprofile)
-    return render(request, 'user_home.html', {'userhomepage': userregister,'userprofile' : userprofile},)
+    return render(request, 'user_home.html', {'userhomepage': userregister,'userprofile' : userprofile})
 
 "******** CHANGE PASSWORD FOR USER ********"
 def userchangepass(request):
@@ -218,20 +218,39 @@ def userchangepass(request):
             print(confpass)
             if newpass != confpass:
                 error = "Your password does not match...."
-                return render(request,'user_home.html',{'error' : error})
+                return HttpResponse(error)
             else:
                 obj1 = Login.objects.filter(emailid=emailid).update(password=newpass)
                 print(obj1)
                 if obj1 == 0:
-                    return render(request,'user_home.html',{'error' : 'Enter a valid emailid'})
+                    error = "Enter a valid email id "
+                    return HttpResponse(error)
                 else:
-                    return render(request,'user_home.html',{'success' :'Password successfully changed'})
+                    return redirect('/user_home/?email=%s'%emailid)
         else:
             error = "All fields are required..."
-            return render(request, 'user_home.html', {'error': error})
+            return HttpResponse(error)
     else:
         return render(request, 'user_home.html')
 
+"******** EDIT PROFILE FOR USER ********"
+def edit(request, email):
+    employee = UserProfile.objects.get(emailid=email)
+    print("EMP = ",employee)
+    return render(request,'user_edit.html', {'employee':employee})
+def update(request, email):
+    if request.method == 'POST':
+        employee = UserProfile.objects.get(emailid=email)
+        employee.profilepic = request.FILES['propic']
+        employee.dob = request.POST.get('dob')
+        employee.gender = request.POST.get('gender')
+        employee.address = request.POST.get('address')
+        employee.phone = request.POST.get('phone')
+        employee.qualification = request.POST.get('qualification')
+        employee.profession = request.POST.get('profession')
+        employee.save()
+        return redirect("/user_home/?email=%s"%email)
+    return render(request, 'user_edit.html')
 "******** DIET AND NUTRITION PAGE FOR USER ********"
 def user_dn(request):
     useremail = request.GET.get('email')
@@ -558,7 +577,7 @@ def user_result(request):
     #Saving the above report to Report table
     form = Report()
     form.emailid = useremail
-    form.bmi = BMIStatus
+    form.bmi = mybmi
     form.bp = BPStatus
     form.hb = HBSTATUS
     form.sugar = FastingStatus
@@ -584,7 +603,7 @@ def user_result(request):
 def user_report(request):
     useremail = request.session['email']
     print("my email = ",useremail)
-    report = Report.objects.filter(emailid = useremail).values().order_by('-date','-time')
+    report = UserAdvise.objects.filter(emailid = useremail).values().order_by('-date','-time')
     print(report)
     name = Login.objects.filter(emailid=useremail).values()
     return render(request, 'user_report.html', {'userreport' : report, 'name': name})
@@ -626,9 +645,13 @@ def userpreview_1(request):
     rname = obj1.emailid  # Getting the email of the Expert
     obj2 = Chat.objects.filter(Q(sender=sname) | Q(receiver=sname))
     print("User Object = ", obj1)
+    #FOR LOADING PROFILE PICTURE IN CHAT
+    userpic = UserProfile.objects.filter(emailid=sname)
+    expertpic = ExpertProfile.objects.filter(emailid=rname)
     request.session['sender'] = sname
     request.session['receiver'] = rname
-    return render(request, 'userchat_1.html', {'myobj': obj1, 'sender': sname})
+    profilepic = zip(userpic,expertpic)
+    return render(request, 'userchat_1.html', {'myobj': obj1, 'sender': sname, 'profile': profilepic})
 
 def get_userchat_msg(request):
     receiver = request.session['receiver']
@@ -757,15 +780,82 @@ def user_articles(request):
     userregister = Login.objects.filter(emailid=useremail).values()
     return render(request, 'user_articles.html', {'userarticle': userregister})
 
+"******** FEEDBACK FORM FOR USER ********"
+def user_feedback(request):
+    useremail = request.GET.get('email')
+    print("Use = ",useremail)
+    userregister = Login.objects.filter(emailid=useremail).values()
+    obj1 = UserProfile.objects.get(emailid=useremail)
+    if request.method == "POST":
+        if request.POST.get('feedback'):
+           try:
+                form =Feedback()
+                form.emailid = useremail
+                form.profilepic = obj1.profilepic
+                form.comment = request.POST.get('feedback')
+                form.save()
+                return render(request,'user_feedback.html',{'userfeedback' : userregister,'email' :useremail,'status': "Your response has been successfully saved. You can view your comments in the indexpage"})
+           except:
+               pass
+    else:
+        form = Login()
+        return render(request,'user_feedback.html',{'userfeedback' : userregister,'email' :useremail})
+
 "******** HOME PAGE OF EXPERT ********"
 def expert_home(request):
     useremail = request.GET.get('expertemail')
     print("useremail = ", useremail)
+    request.session['expemail'] = useremail
     userregister = Login.objects.filter(emailid=useremail).values()
     print(userregister)
     expertprofile = ExpertProfile.objects.filter(emailid=useremail).values()
     print(expertprofile)
     return render(request, 'experts_home.html', {'experthomepage': userregister, 'expertprofile': expertprofile})
+
+"******** CHANGE PASSWORD FOR USER ********"
+def expertchangepass(request):
+    if request.method == "POST":
+        if request.POST.get('newpass') and request.POST.get('cnfpass'):
+            emailid = request.session['expemail']
+            newpass = request.POST.get('newpass')
+            print(newpass)
+            confpass = request.POST.get('cnfpass')
+            print(confpass)
+            if newpass != confpass:
+                error = "Your password does not match...."
+                return render(request,'expert_home.html',{'error' : error})
+            else:
+                obj1 = Login.objects.filter(emailid=emailid).update(password=newpass)
+                print(obj1)
+                if obj1 == 0:
+                    return render(request,'user_home.html',{'error' : 'Enter a valid emailid'})
+                else:
+                    return render(request,'user_home.html',{'success' :'Password successfully changed'})
+        else:
+            error = "All fields are required..."
+            return render(request, 'user_home.html', {'error': error})
+    else:
+        return render(request, 'user_home.html')
+
+"******** EDIT PROFILE FOR EXPERT ********"
+def editprofile(request, email):
+    employee = ExpertProfile.objects.get(emailid=email)
+    return render(request,'expert_edit.html', {'employee':employee})
+def update_expert(request, email):
+    if request.method == 'POST':
+        employee = ExpertProfile.objects.get(emailid=email)
+        employee.profilepic = request.FILES['propic']
+        employee.dob = request.POST.get('dob')
+        employee.gender = request.POST.get('gender')
+        employee.address = request.POST.get('address')
+        employee.phone = request.POST.get('phone')
+        employee.qualification = request.POST.get('qualification')
+        employee.experience = request.POST.get('exp')
+        employee.profstatement = request.POST.get('about')
+        employee.languageknown = request.POST.get('language')
+        employee.save()
+        return redirect("/expert_home/?expertemail=%s"%email)
+    return render(request, 'expert_edit.html')
 
 "******** VIEWING DOCTOR LIST FOR EXPERT ********"
 def expert_doctor(request):
@@ -816,7 +906,7 @@ def expert_viewreq(request):
         for i in list(set(m))[::1]:
             obj = Login.objects.get(emailid=i)
             dict = {}
-            dict['name'] = obj.firstname
+            dict['name'] = obj.firstname + " " + obj.lastname
             dict['msg'] = Chat.objects.filter(sender=i, receiver=useremail).last()
             msg_list.append(dict)
         msg_list = sorted(msg_list, key = lambda i: i['msg'].id, reverse=True)
@@ -858,9 +948,13 @@ def expertpreview_1(request):
     rname = request.GET.get('receiver')
     obj1 = Chat.objects.filter(Q(sender=sname) | Q(receiver=sname))
     print("ExObject = ", obj1)
+    expertpic = ExpertProfile.objects.filter(emailid=sname)
+    print(expertpic[0].profilepic)
+    userpic = UserProfile.objects.filter(emailid=rname)
     request.session['rname'] = rname
     request.session['sname'] = sname
-    return render(request,'expertchat_1.html',{'myobj' : obj1,'sender':sname})
+    profilepic = zip(expertpic,userpic)
+    return render(request,'expertchat_1.html',{'myobj' : obj1,'sender':sname,'profile':profilepic})
 
 def get_chat_msg(request):
     receiver = request.session['rname']

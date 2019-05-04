@@ -76,7 +76,6 @@
               <li class="nav-item active"><a href="/expert_home/?expertemail={{employees.emailid}}" class="nav-link pl-0">Home</a></li>
               <li class="nav-item"><a href="/expert_doctor/?expertemail={{employees.emailid}}" class="nav-link">Experts</a></li>
               <li class="nav-item"><a href="/expert_dn/?expertemail={{employees.emailid}}" class="nav-link">Diet and Nutrition</a></li>
-              <li class="nav-item"><a href="/expert_articles/?expertemail={{employees.emailid}}" class="nav-link">Articles</a></li>
             {% endfor %}
           </ul>
         </div>
@@ -99,6 +98,7 @@
       <h2>Basic Profile</h2>
       {% for employee in expertprofile %}
         <table class="table">
+          <span style="float:right"><a href="/editprofile/{{employee.emailid}}">Edit Profile</a> </span>
           <thead align="justify">
             <tr>
               <th>Profile Picture</th>

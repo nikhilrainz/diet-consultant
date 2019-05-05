@@ -61,10 +61,10 @@
 	      <p class="button-custom order-lg-last mb-0"><a href="/login" class="btn btn-secondary py-2 px-3">Log Out</a></p>
 	      <div class="collapse navbar-collapse" id="ftco-nav">
 	        <ul class="navbar-nav mr-auto">
-	        	<li class="nav-item "><a href="/user_home" class="nav-link pl-0">Home</a></li>
-	            <!-- <li class="nav-item"><a href="user_doctor.html" class="nav-link">Doctors</a></li> -->
-	            <li class="nav-item"><a href="/user_dn" class="nav-link">Diet and Nutrition</a></li>
-	            <li class="nav-item active"><a href="/user_articles" class="nav-link">Articles</a></li>
+                {% for employee in userhomepage %}
+	             <li class="nav-item active"><a href="/user_doctor" class="nav-link">Experts</a></li>
+	            <li class="nav-item"><a href="/user_dn/?email={{employee.emailid}}" class="nav-link">Diet and Nutrition</a></li>
+	            {% endfor %}
 	        </ul>
 	      </div>
 	    </div>
@@ -86,145 +86,26 @@
 		<section class="ftco-section">
 			<div class="container">
 				<div class="row">
+					 {% for use in expert %}
 					<div class="col-md-6 col-lg-3 ftco-animate">
 						<div class="staff">
 							<div class="img-wrap d-flex align-items-stretch">
-								<div class="img align-self-stretch" style="background-image: url({% static '/images/doc-1.jpg' %});"></div>
+								<div class="img align-self-stretch" style="background-image: url({{ MEDIA_URL }}{{use.0.profilepic}});"></div>
 							</div>
 							<div class="text pt-3 text-center">
-								<h3>Dr. Lloyd Wilson</h3>
-								<span class="position mb-2">Neurologist</span>
+								<h3>{{use.0.firstname}} {{use.0.lastname}}</h3>
+								<span class="position mb-2">{{use.0.qualification}}<br>{{use.0.registerno}}</br></span>
 								<div class="faded">
-									<p>I am an ambitious workaholic, but apart from that, pretty simple person.</p>
+									<p></p>
 									<ul class="ftco-social text-center">
-					                	<li class="ftco-animate"><a href="#"><span class="#">Get Advices</span></a></li>
+					                	<li class="ftco-animate"><a href="/user_expertview/?regno={{use.0.registerno}}"><span class="#">View Profile</span></a></li>
 					              	</ul>
-	              </div>
+	              				</div>
 							</div>
 						</div>
 					</div>
-					<div class="col-md-6 col-lg-3 ftco-animate">
-						<div class="staff">
-							<div class="img-wrap d-flex align-items-stretch">
-								<div class="img align-self-stretch" style="background-image: url({% static '/images/doc-2.jpg' %});"></div>
-							</div>
-							<div class="text pt-3 text-center">
-								<h3>Dr. Rachel Parker</h3>
-								<span class="position mb-2">Ophthalmologist</span>
-								<div class="faded">
-									<p>I am an ambitious workaholic, but apart from that, pretty simple person.</p>
-									<ul class="ftco-social text-center">
-					                	<li class="ftco-animate"><a href="#"><span class="#">Get Advices</span></a></li>
-					              	</ul>
-	              </div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6 col-lg-3 ftco-animate">
-						<div class="staff">
-							<div class="img-wrap d-flex align-items-stretch">
-								<div class="img align-self-stretch" style="background-image: url({% static '/images/doc-3.jpg' %});"></div>
-							</div>
-							<div class="text pt-3 text-center">
-								<h3>Dr. Ian Smith</h3>
-								<span class="position mb-2">Dentist</span>
-								<div class="faded">
-									<p>I am an ambitious workaholic, but apart from that, pretty simple person.</p>
-									<ul class="ftco-social text-center">
-					                	<li class="ftco-animate"><a href="#"><span class="#">Get Advices</span></a></li>
-					              	</ul>
-	              </div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6 col-lg-3 ftco-animate">
-						<div class="staff">
-							<div class="img-wrap d-flex align-items-stretch">
-								<div class="img align-self-stretch" style="background-image: url({% static '/images/doc-4.jpg' %});"></div>
-							</div>
-							<div class="text pt-3 text-center">
-								<h3>Dr. Alicia Henderson</h3>
-								<span class="position mb-2">Pediatrician</span>
-								<div class="faded">
-									<p>I am an ambitious workaholic, but apart from that, pretty simple person.</p>
-									<ul class="ftco-social text-center">
-					                	<li class="ftco-animate"><a href="#"><span class="#">Get Advices</span></a></li>
-					              	</ul>
-	              </div>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-6 col-lg-3 ftco-animate">
-						<div class="staff">
-							<div class="img-wrap d-flex align-items-stretch">
-								<div class="img align-self-stretch" style="background-image: url({% static '/images/doc-5.jpg' %});"></div>
-							</div>
-							<div class="text pt-3 text-center">
-								<h3>Dr. Lloyd Wilson</h3>
-								<span class="position mb-2">Neurologist</span>
-								<div class="faded">
-									<p>I am an ambitious workaholic, but apart from that, pretty simple person.</p>
-									<ul class="ftco-social text-center">
-					                	<li class="ftco-animate"><a href="#"><span class="#">Get Advices</span></a></li>
-					              	</ul>
-	              </div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6 col-lg-3 ftco-animate">
-						<div class="staff">
-							<div class="img-wrap d-flex align-items-stretch">
-								<div class="img align-self-stretch" style="background-image: url({% static '/images/doc-6.jpg' %});"></div>
-							</div>
-							<div class="text pt-3 text-center">
-								<h3>Dr. Rachel Parker</h3>
-								<span class="position mb-2">Ophthalmologist</span>
-								<div class="faded">
-									<p>I am an ambitious workaholic, but apart from that, pretty simple person.</p>
-									<ul class="ftco-social text-center">
-					                	<li class="ftco-animate"><a href="#"><span class="#">Get Advices</span></a></li>
-					              	</ul>
-	              </div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6 col-lg-3 ftco-animate">
-						<div class="staff">
-							<div class="img-wrap d-flex align-items-stretch">
-								<div class="img align-self-stretch" style="background-image: url({% static '/images/doc-7.jpg' %});"></div>
-							</div>
-							<div class="text pt-3 text-center">
-								<h3>Dr. Ian Smith</h3>
-								<span class="position mb-2">Dentist</span>
-								<div class="faded">
-									<p>I am an ambitious workaholic, but apart from that, pretty simple person.</p>
-									<ul class="ftco-social text-center">
-					                	<li class="ftco-animate"><a href="#"><span class="#">Get Advices</span></a></li>
-					              	</ul>
-	              </div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6 col-lg-3 ftco-animate">
-						<div class="staff">
-							<div class="img-wrap d-flex align-items-stretch">
-								<div class="img align-self-stretch" style="background-image: url({% static '/images/doc-8.jpg' %});"></div>
-							</div>
-							<div class="text pt-3 text-center">
-								<h3>Dr. Alicia Henderson</h3>
-								<span class="position mb-2">Pediatrician</span>
-								<div class="faded">
-									<p>I am an ambitious workaholic, but apart from that, pretty simple person.</p>
-									<ul class="ftco-social text-center">
-					                	<li class="ftco-animate"><a href="#"><span class="#">Get Advices</span></a></li>
-					              	</ul>
-	              </div>
-							</div>
-						</div>
-					</div>
+					{% endfor %}
 				</div>
-
 			</div>
 		</section>
 

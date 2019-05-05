@@ -40,14 +40,14 @@
             <div class="card card-4">
                 <div class="card-body">
                     
-                    <h2 class="title">Complete your Profile</h2>
-                    <form method="POST" class="post-form" action="/user_profile/">
+                    <h2 class="title">Complete your Profile - {{obj1.firstname}} {{obj1.lastname}}</h2>
+                    <form method="POST" enctype="multipart/form-data" class="post-form" action="/user_profile/?email={{useremail}}">
                         {% csrf_token %}
 
                         <div class="row row-space">
                             <div class="input-group">
                                     <label class="label">Email Id</label>
-                                    <input class="input--style-4" type="text" name="emailid">
+                                    <input class="input--style-4" type="text" name="emailid" value="{{useremail}}" disabled>
                             </div>
 
                         </div>
@@ -57,7 +57,7 @@
                                 <div class="input-group">
                                     <label class="label">Date of Birth</label>
                                     <div class="input-group-icon">
-                                        <input class="input--style-4 js-datepicker" type="text" name="birthday">
+                                        <input class="input--style-4 js-datepicker" type="text" name="birthday" required>
                                         <i class="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
                                     </div>
                                 </div>
@@ -81,13 +81,13 @@
                         <div class="row row-space">
                             <div class="input-group">
                                     <label class="label">Address</label>
-                                    <input class="input--style-4" type="text" name="address">
+                                    <input class="input--style-4" type="text" name="address" required>
                             </div>
                         
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Phone Number</label>
-                                    <input class="input--style-4" type="text" name="phone">
+                                    <input class="input--style-4" type="text" name="phone" pattern="[7-9]{1}[0-9]{9}" title="Phone number with 7-9 and remaing 9 digit with 0-9" required>
                                 </div>
                             </div>
                         </div>
@@ -95,7 +95,7 @@
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Qualification</label>
-                                     <select name="qualification" class="input--style-4" >
+                                     <select name="qualification" class="input--style-4" required>
                                         <option value="" selected="selected" disabled="disabled">-- select one --</option>
                                         <option value="No formal education">No formal education</option>
                                         <option value="Primary education">Primary education</option>
@@ -110,7 +110,7 @@
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Profession</label>
-                                    <select name="profession" class="input--style-4" >
+                                    <select name="profession" class="input--style-4" required>
                                         <option value="" selected="selected" disabled="disabled">-- select one --</option>
                                         <option value = "student">Student</option>
                                         <option value = "engineer">Engineer</option>
@@ -120,10 +120,18 @@
                                         <option value = "lecturer">Lecturer</option>
                                         <option value = "scientist">Scientist</option>
                                         <option value = "clerk">Clerk</option>
-                                        <option value = "engineer">Engineer</option>
+                                        <option value = "engineer">Others</option>
+                                        <option value = "housewife">House Wife</option>
                                     </select>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row row-space">
+                            <div class="input-group">
+                                    <label class="label">Profile Picture</label>
+                                    <input class="input--style-4" type="file" name="picture" required>
+                            </div>
+
                         </div>
                         
                         <div class="p-t-15">

@@ -53,14 +53,14 @@ def user_register(request):
             form.password = request.POST.get('password')
             cnfpassword = request.POST.get('confirmpassword')
 
-            if form.password == cnfpassword:
+            obj1 = Login.objects.filter(emailid=form.emailid)
+            if obj1.count() == 0:
                 form.entry = "User"
                 form.save()
                 return redirect('/login')
             else:
-                #messages.warning(request, 'Password does not match')
                 form = Login()
-                return render(request, 'user_register.html')
+                return render(request, 'user_register.html',{'error' : 'This emailid already exists'})
         else:
             messages.warning(request, 'Please fill all the fields to continue...')
 
@@ -76,14 +76,14 @@ def expert_register(request):
             form.password = request.POST.get('password')
             cnfpassword = request.POST.get('confirmpassword')
 
-            if form.password == cnfpassword:
+            obj1 = Login.objects.filter(emailid=form.emailid)
+            if obj1.count() == 0:
                 form.entry = "Expert"
                 form.save()
                 return redirect('/login')
             else:
-                #messages.warning(request, 'Password does not match')
                 form = Login()
-                return render(request, 'expert_register.html')
+                return render(request, 'expert_register.html', {'error': 'This emailid already exists'})
         else:
             messages.warning(request, 'Please fill all the fields to continue...')
 
@@ -124,10 +124,13 @@ def login(request):
         return render(request, 'Login.html')
 
 def user_profile(request):
+    useremail = request.GET.get('email') # for inputting email id in form
+    print("use em = ",useremail )
+    obj1 = Login.objects.get(emailid=useremail) #for displaying name in form
     if request.method == "POST":
-        if request.POST.get('emailid') and request.POST.get('birthday') and request.POST.get('gender') and request.POST.get('address') and request.POST.get('phone') and request.POST.get('qualification') and request.POST.get('profession'):
+        if request.POST.get('birthday') and request.POST.get('gender') and request.POST.get('address') and request.POST.get('phone') and request.POST.get('qualification') and request.POST.get('profession'):
             myform = UserProfile()
-            myform.emailid = request.POST.get('emailid')
+            myform.emailid = useremail
             myform.dob = request.POST.get('birthday')
             myform.gender = request.POST.get('gender')
             myform.address = request.POST.get('address')
@@ -140,11 +143,10 @@ def user_profile(request):
             myform.lastname = lastname
             myform.profilepic = request.FILES['picture']
 
-            em = request.POST.get('emailid')
-            obj1 = Login.objects.get(emailid = em)
+            obj1 = Login.objects.get(emailid = myform.emailid)
             dbemail = obj1.emailid
             print(dbemail)
-            if em == dbemail:
+            if myform.emailid == dbemail:
                 obj1.status = 1
                 obj1.save()
                 myform.save()
@@ -155,7 +157,7 @@ def user_profile(request):
             myform = UserProfile()
             return render(request, 'user_profile.html')
 
-    return render(request, 'user_profile.html')
+    return render(request, 'user_profile.html',{'useremail' : useremail,'obj1' : obj1})
 
 def expert_profile(request):
     if request.method == "POST":
@@ -282,10 +284,13 @@ def user_dn(request):
 
 "******** COMPLETE HEALTH PROFILE OF USER ********"
 def user_advise(request):
+    useremail = request.session['email']
+    print("user = ",useremail)
+    obj1 = Login.objects.get(emailid = useremail)
     if request.method == "POST":
-        if request.POST.get('emailid') and request.POST.get('height') and request.POST.get('weight') and request.POST.get('hb') and request.POST.get('systolic') and request.POST.get('dystolic') and request.POST.get('fasting sugar') and request.POST.get('after food') and request.POST.get('hdl') and request.POST.get('ldl') and request.POST.get('try') and request.POST.get('total') and request.POST.get('heartdiseases') and request.POST.get('sedentary') and request.POST.get('breakfast') and request.POST.get('lunch') and request.POST.get('snacks') and request.POST.get('dinner'):
+        if request.POST.get('height') and request.POST.get('weight') and request.POST.get('hb') and request.POST.get('systolic') and request.POST.get('dystolic') and request.POST.get('fasting sugar') and request.POST.get('after food') and request.POST.get('hdl') and request.POST.get('ldl') and request.POST.get('try') and request.POST.get('total') and request.POST.get('heartdiseases') and request.POST.get('sedentary') and request.POST.get('breakfast') and request.POST.get('lunch') and request.POST.get('snacks') and request.POST.get('dinner'):
             form = UserAdvise()
-            form.emailid = request.POST.get('emailid')
+            form.emailid = useremail
             form.height = request.POST.get('height')
             form.weight = request.POST.get('weight')
             form.hb = request.POST.get('hb')
@@ -336,7 +341,7 @@ def user_advise(request):
                 return HttpResponse("Emailid not matching")
         else:
             return HttpResponse("Fill all fields")
-    return render(request, 'user_advise.html')
+    return render(request, 'user_advise.html',{'useremail' : useremail,'obj1' : obj1})
 
 "******** STANDARD RESULT OF USER ********"
 def user_result(request):
@@ -610,6 +615,9 @@ def user_report(request):
 
 "******** LIST OF AVAILABLE DOCTORS FOR THE USER ********"
 def user_doctor(request):
+    useremail = request.session['email']
+    print("us = ",useremail)
+    user = Login.objects.filter(emailid=useremail).values() # for homepage links
     obj1 = Login.objects.filter(entry="Expert")
     length = len(obj1)
     mydict = []
@@ -623,17 +631,19 @@ def user_doctor(request):
     print(length)
     print(type(obj1))
     print(type(mydict))
-    context = {'expert': mydict}
+    context = {'expert': mydict,'userhomepage' : user}
     return render(request, 'user_doctor.html', context)
 
 "******** VIEW DOCTOR PROFILE FOR USER ********"
 def user_expertview(request):
+    useremail = request.session['email']
+    userregister = Login.objects.filter(emailid=useremail).values() # FOR HOMEPAGE LINKS
     regno = request.GET.get('regno')
     print("Regno = ",regno)
     experts = ExpertProfile.objects.filter(registerno=regno).values()
     print("Experts = ",experts)
     request.session['regno'] = regno
-    return render(request,'user_expertview.html',{'experts' : experts})
+    return render(request,'user_expertview.html',{'experts' : experts,'userhomepage' : userregister})
 
 "******** CHAT PREVIEW FOR USER ********"
 def userpreview_1(request):
@@ -823,19 +833,20 @@ def expertchangepass(request):
             print(confpass)
             if newpass != confpass:
                 error = "Your password does not match...."
-                return render(request,'expert_home.html',{'error' : error})
+                return HttpResponse(error)
             else:
                 obj1 = Login.objects.filter(emailid=emailid).update(password=newpass)
                 print(obj1)
                 if obj1 == 0:
-                    return render(request,'user_home.html',{'error' : 'Enter a valid emailid'})
+                    error = "Enter a valid emailid"
+                    return HttpResponse(error)
                 else:
-                    return render(request,'user_home.html',{'success' :'Password successfully changed'})
+                    return redirect('/expert_home/?expertemail=%s'%emailid)
         else:
             error = "All fields are required..."
-            return render(request, 'user_home.html', {'error': error})
+            return HttpResponse(error)
     else:
-        return render(request, 'user_home.html')
+        return render(request, 'experts_home.html')
 
 "******** EDIT PROFILE FOR EXPERT ********"
 def editprofile(request, email):

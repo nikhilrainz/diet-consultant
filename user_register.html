@@ -41,18 +41,18 @@
                 <div class="card-body">
                 	
                     <h2 class="title">Create a New Account</h2>
-                    <form method="POST" class="post-form" action="/userreg/">
+                    <form method="POST" class="post-form" action="/userreg/" name="userreg" onsubmit="return valid()">
                         {% csrf_token %}
                         <div class="row row-space">
                             <div class="input-group">
                                     <label class="label">First Name</label>
-                                    {{userform.firstname}}
+                                    <input class="input--style-4" type="text" name="firstname" id="firstname" required pattern="[A-Za-z\s]{3,}" title="Enter Firstname">
                             </div>
                         
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Last Name</label>
-                                    {{userform.lastname}}
+                                    <input class="input--style-4" type="text" name="lastname" id="lastname" required pattern="[A-Za-z\s]{1,}" title="Enter Lastname">
                                 </div>
                             </div>
                         </div>
@@ -61,13 +61,14 @@
                             <div class="col-2">
                                  <div class="input-group">
                                     <label class="label">Email Id</label>
-                                    {{userform.emailid}}
-                                </div>
+                                    <input class="input--style-4" type="email" name="email" id="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Enter Email Id">
+                                    <span style="color:red;">{{error}}</span>
+                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Password</label>
-                                    {{userform.password}}
+                                    <input class="input--style-4" type="password" name="password" id="password" pattern=".{3,}" title="Must contain 3 or more characters">
                                 </div>
                             </div>
                         </div>
@@ -75,11 +76,13 @@
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Confirm Password</label>
-                                    {{userform.confirmpassword}}
+                                    <input class="input--style-4" type="password" name="confirmpassword" id="confirmpassword" required>
                                 </div>
                             </div>
                         </div>
-                        
+                        <p id="result"></p>
+		                <br><br>
+
                         <div class="p-t-15">
                             <button class="btn btn--radius-2 btn--blue" type="submit">Submit</button>
                         </div>
@@ -89,7 +92,22 @@
         </div>
     </div>
 </div>
-</div>
+
+    <script type="text/javascript">
+		function valid(){
+		    var npass=document.getElementById("password").value;
+			var cpass=document.getElementById("confirmpassword").value;
+
+			if((npass!=cpass)){
+				document.getElementById("password").value="";
+				document.getElementById("confirmpassword").value="";
+
+				document.getElementById("result").style.color="red";
+				document.getElementById("result").innerHTML="Password not same";
+				return false;
+			}
+		}
+	</script>
 
     <!-- Jquery JS-->
     <script src="../static/vendor1/jquery/jquery.min.js"></script>

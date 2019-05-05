@@ -69,7 +69,8 @@
         <div class="collapse navbar-collapse" id="ftco-nav">
           <ul class="navbar-nav mr-auto">
            {% for employee in userhomepage %}
-            <li class="nav-item"><a href="/user_doctor/?email={{employee.emailid}}" class="nav-link">Diet and Nutrition</a></li>
+            <li class="nav-item active"><a href="/user_doctor" class="nav-link">Experts</a></li>
+            <li class="nav-item"><a href="/user_dn/?email={{employee.emailid}}" class="nav-link">Diet and Nutrition</a></li>
             {% endfor %}
           </ul>
         </div>
@@ -114,7 +115,7 @@
               <td>{{employee.experience}}</td>
             </tr>
           </table>
-        <div align="center"><a href="/user_request/?regno={{employee.registerno}}" class="btn btn-secondary py-2 px-3">GetDietPlan</a></div>
+        <div align="center"><a href="/userpreview1/?regno={{employee.registerno}}" target="_blank" class="btn btn-secondary py-2 px-3">GetDietPlan</a></div>
           {% endfor %}
       </div>
     </section>

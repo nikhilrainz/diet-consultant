@@ -43,20 +43,19 @@
 						Log in
 					</span>
 
-										
 					<div class="wrap-input100 validate-input" data-validate = "Enter emailaddress">
-						<!--<input class="input100" type="text" name="emailaddress" placeholder="Email Address">-->
-						{{loginform.emailid}}
+						<input class="input100" type="text" name="emailaddress" placeholder="Email Address" required>
+						<!--{{loginform.emailid}}-->
 						<span class="focus-input100" data-placeholder="&#xf159;"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="Enter password">
-						<!--<input class="input100" type="password" name="pass" placeholder="Password">-->
-						{{loginform.password}}
+						<input class="input100" type="password" name="pass" placeholder="Password" required>
+						<!--{{loginform.password}}-->
 						<span class="focus-input100" data-placeholder="&#xf191;"></span>
 					</div>
 
-										
+					<span style="color:red;">{{error}}</span>
 					<div class="container-login100-form-btn">
 						<button class="login100-form-btn">
 							Login

@@ -29,6 +29,16 @@
 	<!-- Registration Background Css -->    
     <link rel="stylesheet" type="text/css" href="../static/css/util.css">
 	<link rel="stylesheet" type="text/css" href="../static/css/main.css">
+    <style type="text/css">
+	.no-spinners {
+		-moz-appearance:textfield;
+	}
+	.no-spinners::-webkit-outer-spin-button,
+	.no-spinners::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+</style>
 </head>
 
 <body>
@@ -40,13 +50,13 @@
             <div class="card card-4">
                 <div class="card-body">
                 	
-                    <h2 class="title">Create a new account</h2>
-                    <form method="POST" class="post-form" action="/expert_profile/">
+                    <h2 class="title">Complete your profile - {{obj1.firstname}} {{obj1.lastname}}</h2>
+                    <form method="POST" enctype="multipart/form-data" class="post-form" action="/expert_profile/?email={{useremail}}">
+                        {% csrf_token %}
                         <div class="row row-space">
                             <div class="input-group">
                                     <label class="label">Email Id</label>
-                                    <!--<input class="input&#45;&#45;style-4" type="text" name="Address">-->
-                                     {{expertform.emailid}}
+                                    <input class="input--style-4" type="email" name="emailid" value="{{useremail}}">
                             </div>
                         </div>
                         <div class="row row-space">
@@ -54,8 +64,7 @@
                                 <div class="input-group">
                                     <label class="label">Date of Birth</label>
                                     <div class="input-group-icon">
-                                        <!--<input class="input&#45;&#45;style-4 js-datepicker" type="text" name="birthday">-->
-                                         {{expertform.dob}}
+                                        <input class="input--style-4 js-datepicker" type="text" name="birthday" required>
                                         <i class="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
                                     </div>
                                 </div>
@@ -64,7 +73,14 @@
                                 <div class="input-group">
                                     <label class="label">Gender</label>
                                     <div class="p-t-10">
-                                        {{expertform.gender}}
+                                        <label class="radio-container m-r-45">Male
+                                            <input type="radio" checked="checked" name="gender" value="male">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                        <label class="radio-container">Female
+                                            <input type="radio" name="gender" value="female">
+                                            <span class="checkmark"></span>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -72,15 +88,13 @@
                         <div class="row row-space">
                             <div class="input-group">
                                     <label class="label">Address</label>
-                                   <!-- <input class="input&#45;&#45;style-4" type="text" name="Address">      -->
-                                    {{expertform.address}}
+                                    <input class="input--style-4" type="text" name="address" required>
                             </div>
                         
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Phone Number</label>
-                                    <!--<input class="input&#45;&#45;style-4" type="text" name="phone">-->
-                                    {{expertform.phone}}
+                                    <input class="input--style-4 no-spinners" type="text" name="phone" pattern="[7-9]{1}[0-9]{9}" title="Phone number with 7-9 and remaing 9 digit with 0-9" max="10" required>
                                 </div>
                             </div>
                         </div>
@@ -88,21 +102,19 @@
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Qualification</label>
-                                    <!--<select name="Profession" class="input&#45;&#45;style-4" >
-                                        <option value="" selected="selected" disabled="disabled">&#45;&#45; select one &#45;&#45;</option>
-                                        <option value="msc nutrition">Msc[Nutrition]</option>
-                                        <option value="phd nutrition">PhD[Nutrition]</option>
-                                        <option value="dip in nutrition">PG Diploma in Nutrition</option>
-                                        <option value="bsc f and n">B.Sc(Food/Nutrition)</option>
-                                    </select>-->
-                                    {{expertform.qualification}}
+                                    <select name="qualification" class="input--style-4" required>
+                                        <option value="" selected="selected" disabled="disabled">-- select one --</option>
+                                        <option value="Msc[Nutrition]">Msc[Nutrition]</option>
+                                        <option value="PhD[Nutrition]">PhD[Nutrition]</option>
+                                        <option value="PG Diploma in Nutrition">PG Diploma in Nutrition</option>
+                                        <option value="B.Sc(Food/Nutrition)">B.Sc(Food/Nutrition)</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Registration Number</label>
-                                    <!--<input class="input&#45;&#45;style-4" type="text" name="regno">-->
-                                    {{expertform.registerno}}
+                                    <input class="input--style-4" type="text" name="regno" pattern="[A-Za-z]{4}[0-9]{7}" title="First four characters and remaining 7 digits" max="11" required>
                                 </div>
                             </div>
                         </div>
@@ -111,8 +123,7 @@
                                 <div class="input-group">
                                     <label class="label">Year of Registration</label>
                                     <div class="input-group-icon">
-                                        <!--<input class="input&#45;&#45;style-4 js-datepicker" type="text" name="birthday">-->
-                                        {{expertform.yearofreg}}
+                                        <input class="input--style-4 js-datepicker" type="text" name="year" required>
                                         <i class="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
                                     </div>
                                 </div>
@@ -120,12 +131,31 @@
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Experience</label>
-                                    <!--<input class="input&#45;&#45;style-4" type="text" name="experience">-->
-                                    {{expertform.experience}}
+                                    <input class="input--style-4 no-spinners" type="number" name="experience" pattern="[0-9]{3}" required>
                                 </div>
                             </div>
                         </div>
-                        
+                        <div class="row row-space">
+                            <div class="input-group">
+                                    <label class="label">Profile Picture</label>
+                                    <input class="input--style-4" type="file" name="picture" required style="width:70%;">
+                            </div>
+
+                        </div>
+                         <div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Professional Statement</label>
+                                    <textarea class="input--style-4" name="about" rows="5" cols="22" required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Languages Known</label>
+                                     <input class="input--style-4" type="text" name="language" required>
+                                </div>
+                            </div>
+                         </div>
                         <div class="p-t-15">
                             <button class="btn btn--radius-2 btn--blue" type="submit">Submit</button>
                         </div>
@@ -135,7 +165,7 @@
         </div>
     </div>
 </div>
-</div>
+
 
     <!-- Jquery JS-->
     <script src="../static/vendor1/jquery/jquery.min.js"></script>

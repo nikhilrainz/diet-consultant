@@ -91,21 +91,28 @@
       <h2>Registered Users</h2>
         <table class="table table-bordered">
         <tr>
+          <th>Profile Picture</th>
           <th>Name</th>
+          <th>DOB</th>
+          <th>Gender</th>
+          <th>Address</th>
           <th>Phone No</th>
           <th>Qualification</th>
           <th>Profession</th>
           <th>Email Id</th>
-          <th>Action</th>
-        </tr>
-        <tr>
-          <td>Nikhil Prakash</td>
-          <td>9947577142</td>
-          <td>Master's Degree</td>
-          <td>Student</td>
-          <td>nikhilprakash95@gmail.com</td>
-          <td><a href="/admin_userview"><input type="button" class="btn btn-success py-2 px-3" name="view" value="View Profile"></a></td>
-        </tr>
+        {% for i in myobj %}
+          <tr>
+            <td><img src="{{ MEDIA_URL }}{{i.profilepic}}" width="150px",height="150px"></td>
+            <td nowrap=" ">{{i.firstname}} {{i.lastname}}</td>
+            <td>{{i.dob}}</td>
+            <td>{{i.gender}}</td>
+            <td>{{i.address}}</td>
+            <td>{{i.phone}}</td>
+            <td>{{i.qualification}}</td>
+            <td>{{i.profession}}</td>
+            <td>{{i.emailid}}</td>
+          </tr>
+        {% endfor %}
       </table>
     </div>
   </section>

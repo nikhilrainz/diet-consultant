@@ -91,21 +91,31 @@
       <h2>Registered Experts</h2>
         <table class="table table-bordered">
         <tr>
+          <th>Profile Picture</th>
           <th>Name</th>
+          <th>DOB</th>
+          <th>Gender</th>
+          <th>Address</th>
           <th>Phone No</th>
           <th>Qualification</th>
           <th>Experience</th>
+          <th nowrap=" ">Year of Reg</th>
           <th>Email Id</th>
-          <th>Action</th>
         </tr>
-        <tr>
-          <td>Dr.Tiny Nair</td>
-          <td>9947577142</td>
-          <td>PG Diploma in Nutrition</td>
-          <td>35</td>
-          <td>dr.tinynair@gmail.com</td>
-          <td><a href="/admin_viewexpert"><input type="button" class="btn btn-success py-2 px-3" name="view" value="View Profile"></a></td>
-        </tr>
+        {% for i in myobj %}
+          <tr>
+            <td><img src="{{ MEDIA_URL }}{{i.profilepic}}" width="150px",height="150px"></td>
+            <td nowrap=" ">{{i.firstname}} {{i.lastname}}</td>
+            <td>{{i.dob}}</td>
+            <td>{{i.gender}}</td>
+            <td>{{i.address}}</td>
+            <td>{{i.phone}}</td>
+            <td>{{i.qualification}}</td>
+            <td>{{i.experience}}</td>
+            <td>{{i.yearofreg}}</td>
+            <td>{{i.emailid}}</td>
+          </tr>
+        {% endfor %}
       </table>
     </div>
   </section>

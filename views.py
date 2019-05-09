@@ -95,31 +95,33 @@ def login(request):
         if request.POST.get('emailaddress') and request.POST.get('pass'):
             userid = request.POST.get('emailaddress')
             passw = request.POST.get('pass')
+            try:
+                obj1 = Login.objects.get(emailid=userid)
+                dbfirstname = obj1.firstname
+                dblastname = obj1.lastname
+                dbemail = obj1.emailid
+                dbpass = obj1.password
+                dbstatus = obj1.status
+                dbentry = obj1.entry
 
-            obj1 = Login.objects.get(emailid = userid)
-            dbfirstname = obj1.firstname
-            dblastname = obj1.lastname
-            dbemail = obj1.emailid
-            dbpass = obj1.password
-            dbstatus = obj1.status
-            dbentry = obj1.entry
-
-            if dbemail == userid and dbpass == passw and dbstatus == 0  and dbentry == "User" :
-                request.session['firstname'] = dbfirstname
-                request.session['lastname'] = dblastname
-                return redirect('/user_profile/?email=%s'%dbemail)
-            elif dbemail == userid and dbpass == passw and dbstatus == 1  and dbentry == "User" :
-                return redirect('/user_home/?email=%s'% dbemail)
-            elif dbemail == userid and dbpass == passw and dbstatus == 0  and dbentry == "Expert" :
-                request.session['firstname'] = dbfirstname
-                request.session['lastname'] = dblastname
-                return redirect('/expert_profile/?email=%s'% dbemail)
-            elif dbemail == userid and dbpass == passw and dbstatus == 1  and dbentry == "Expert" :
-                return redirect('/expert_home/?expertemail=%s'% dbemail)
-            elif dbemail == userid and dbpass == passw and dbstatus == 1  and dbentry == "Admin" :
-                return redirect('/admin_home/?expertemail=%s'% dbemail)
-            else:
-                return render(request, 'Login.html')
+                if dbemail == userid and dbpass == passw and dbstatus == 0  and dbentry == "User" :
+                    request.session['firstname'] = dbfirstname
+                    request.session['lastname'] = dblastname
+                    return redirect('/user_profile/?email=%s'%dbemail)
+                elif dbemail == userid and dbpass == passw and dbstatus == 1  and dbentry == "User" :
+                    return redirect('/user_home/?email=%s'% dbemail)
+                elif dbemail == userid and dbpass == passw and dbstatus == 0  and dbentry == "Expert" :
+                    request.session['firstname'] = dbfirstname
+                    request.session['lastname'] = dblastname
+                    return redirect('/expert_profile/?email=%s'% dbemail)
+                elif dbemail == userid and dbpass == passw and dbstatus == 1  and dbentry == "Expert" :
+                    return redirect('/expert_home/?expertemail=%s'% dbemail)
+                elif dbemail == userid and dbpass == passw and dbstatus == 1  and dbentry == "Admin" :
+                    return redirect('/admin_home/?email=%s'% dbemail)
+                else:
+                    return render(request, 'Login.html',{'error' : 'invalid emailid or password'})
+            except Login.DoesNotExist:
+                return render(request,'Login.html',{'error' : 'Invalid email id or password'})
     else:
         return render(request, 'Login.html')
 
@@ -160,10 +162,12 @@ def user_profile(request):
     return render(request, 'user_profile.html',{'useremail' : useremail,'obj1' : obj1})
 
 def expert_profile(request):
+    useremail = request.GET.get('email')
+    obj1 = Login.objects.get(emailid = useremail)
     if request.method == "POST":
-        if request.POST.get('emailid') and request.POST.get('birthday') and request.POST.get('gender') and request.POST.get('address') and request.POST.get('phone') and request.POST.get('qualification') and request.POST.get('regno') and request.POST.get('year') and request.POST.get('experience') and request.POST.get('about') and request.POST.get('language'):
+        if request.POST.get('birthday') and request.POST.get('gender') and request.POST.get('address') and request.POST.get('phone') and request.POST.get('qualification') and request.POST.get('regno') and request.POST.get('year') and request.POST.get('experience') and request.POST.get('about') and request.POST.get('language'):
             myform = ExpertProfile()
-            myform.emailid = request.POST.get('emailid')
+            myform.emailid = useremail
             myform.dob = request.POST.get('birthday')
             myform.gender = request.POST.get('gender')
             myform.address = request.POST.get('address')
@@ -180,7 +184,7 @@ def expert_profile(request):
             myform.profstatement = request.POST.get('about')
             myform.languageknown = request.POST.get('language')
 
-            em = request.POST.get('emailid')
+            em = useremail
             obj1 = Login.objects.get(emailid=em)
             dbemail = obj1.emailid
             print(dbemail)
@@ -188,14 +192,14 @@ def expert_profile(request):
                 obj1.status = 1
                 obj1.save()
                 myform.save()
-                return redirect('/expert_home/?email=%s' % dbemail)
+                return redirect('/expert_home/?expertemail=%s' % dbemail)
             else:
                 messages.add_message(request, 'emailid doesnot exist')
         else:
             myform = ExpertProfile()
             return render(request, 'expert_profile.html')
 
-    return render(request, 'expert_profile.html')
+    return render(request, 'expert_profile.html',{'useremail' : useremail,'obj1' : obj1})
 
 "-----------------------Login Profiles-------------------------------"
 "******** HOME PAGE OF USER ********"
@@ -389,21 +393,24 @@ def user_result(request):
     mybmi = float(Weight / (heightinmetre * 2))
     print("My BMI = ",mybmi)
     #Picking age range from BMI table
-    bmi = BMI.objects.get(agemin__lte=age, agemax__gte=age)
-    print("BMI = ",bmi)
-    minbmi = int(bmi.bmimin)
-    print("min = ", minbmi)
-    maxbmi = int(bmi.bmimax)
-    print("max = ", maxbmi)
-    #BMI Comparison
-    if mybmi >= minbmi and mybmi <= maxbmi:
+    try:
+        bmi = BMI.objects.get(agemin__lte=age, agemax__gte=age)
+        print("BMI = ",bmi)
+        minbmi = int(bmi.bmimin)
+        print("min = ", minbmi)
+        maxbmi = int(bmi.bmimax)
+        print("max = ", maxbmi)
+        #BMI Comparison
+        if mybmi >= minbmi and mybmi <= maxbmi:
+            BMIStatus = "Normal"
+        elif mybmi < minbmi:
+            BMIStatus = "Obese"
+        elif mybmi > maxbmi:
+            BMIStatus = "Over Weight"
+        else:
+            return HttpResponse("Invalid")
+    except BMI.DoesNotExist:
         BMIStatus = "Normal"
-    elif mybmi < minbmi:
-        BMIStatus = "Obese"
-    elif mybmi > maxbmi:
-        BMIStatus = "Over Weight"
-    else:
-        return HttpResponse("Invalid")
 
     #Picking age range from BP Table
     bp = BP.objects.get(agemin__lte=age, agemax__gte=age)
@@ -1009,9 +1016,35 @@ def expert_articles(request):
 "------------------ADMIN PAGES----------------------------------"
 "******** HOMEPAGE OF ADMIN ********"
 def admin_home(request):
-    template = loader.get_template('admin_home.html')
-    return HttpResponse(template.render())
-
+    useremail = request.GET.get('email')
+    request.session['admin'] = useremail
+    admin = Login.objects.filter(emailid=useremail).values()
+    return render(request, 'admin_home.html', {'admin': admin})
+"******** CHANGE PASSWORD FOR ADMIN ********"
+def adminchangepass(request):
+    if request.method == "POST":
+        if request.POST.get('newpass') and request.POST.get('cnfpass'):
+            emailid = request.session['admin']
+            newpass = request.POST.get('newpass')
+            print(newpass)
+            confpass = request.POST.get('cnfpass')
+            print(confpass)
+            if newpass != confpass:
+                error = "Your password does not match...."
+                return HttpResponse(error)
+            else:
+                obj1 = Login.objects.filter(emailid=emailid).update(password=newpass)
+                print(obj1)
+                if obj1 == 0:
+                    error = "Enter a valid emailid"
+                    return HttpResponse(error)
+                else:
+                    return redirect('/admin_home/?email=%s'%emailid)
+        else:
+            error = "All fields are required..."
+            return HttpResponse(error)
+    else:
+        return render(request, 'admin_home.html')
 "******** VIEWING REGISTERED EXPERTS ********"
 def admin_doctor(request):
     obj1 = ExpertProfile.objects.all()
@@ -1019,8 +1052,9 @@ def admin_doctor(request):
 
 "******** VIEWING REGISTERED USER ********"
 def admin_user(request):
-    template = loader.get_template('admin_user.html')
-    return HttpResponse(template.render())
+    obj1 = UserProfile.objects.all()
+    return render(request,'admin_user.html',{'myobj' : obj1})
+
 
 
 

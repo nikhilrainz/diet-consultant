@@ -21,9 +21,9 @@
                     {% if status == 1 %}
                         {% for obj in myobj %}
                             {% if obj.sender == sender %}
-                                <li class="text-right list-group-item"style="color:blue;">{{obj.message}}</li>
+                                <li class="text-right list-group-item"style="color:blue;">{{obj.message}}<br><h6><span style="float-right";>{{obj.created}}</span> </h6></li>
                             {% else %}
-                                <li class="text-left list-group-item">{{obj.message}}</li>
+                                <li class="text-left list-group-item">{{obj.message}}<br><h6><span style="float-right";>{{obj.created}}</span> </h6></li>
                             {% endif %}
                         {% empty %}
                             <li class="text-left list-group-item">No messages Yet!</li>
@@ -55,4 +55,18 @@
 <!--
 <script src="../static/chat.js"></script>
 -->
+<script>
+    function refresh() {
+    $.ajax({
+        url: 'user_chatpreview.html'
+        success: function(data) {
+            $('#msg-list').html(data);
+         }
+      });
+      setTimeout(refresh, 10000);
+    }
+    $(function(){
+        refresh();
+     });
+</script>
 </html>

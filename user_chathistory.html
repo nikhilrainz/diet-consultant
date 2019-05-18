@@ -80,9 +80,9 @@
         <div class="table table-striped ">
             <table class="table">
                 <tbody align="justify">
-                {% for i in myobj %}
+                {% for i,j in myobj %}
                 <tr>
-                    <td nowrap=""><a href="/user_chatpreview/?emailid={{i.receiver}}">{{i.receiver}}</a></td>
+                    <td nowrap=""><a href="/user_chatpreview/?emailid={{j.receiver}}" target="_blank">{{i}}</a></td>
                 </tr>
                 {% endfor %}
                 </tbody>

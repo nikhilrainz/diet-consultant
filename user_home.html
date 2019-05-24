@@ -145,7 +145,6 @@
     {% for employee in userhomepage %}
     <form method="POST" class="post-form" action="/userchangepass/?email={{employee.emailid}}" onsubmit="return valid()">
       {% csrf_token %}
-
       <h2>Change Password</h2>
         <table class="table">
 
@@ -156,18 +155,18 @@
       {% endfor %}
         <tr>
           <th>New Password</th>
-          <td><input type="password" name="newpass" placeholder="Enter your New Password" required style="width: 35%;">
+          <td><input type="password" id="newpass" name="newpass" placeholder="Enter your New Password" required style="width: 35%;">
               <!--{{employee.password}}-->
           </td>
         </tr>
         <tr>  
           <th>Confirm Password</th>
-          <td><input type="password" name="cnfpass" placeholder="Re-enter new password" required style="width: 35%;">
+          <td><input type="password" id="cnfpass" name="cnfpass" placeholder="Re-enter new password" required style="width: 35%;">
              <p id="result"></p>
           </td>
         </tr>
         <tr>
-          <td align="center"><button type="submit">Update Password</button></td>
+          <td align="center"><input type="submit" name="submit" value="Update Password"></td>
         </tr>
       </table>
     </form>
@@ -189,7 +188,7 @@
             document.getElementById(pageName).style.display = "block";
         }
    </script>
-    <script type="text/javascript">
+    <script>
         function valid(){
 			var npass=document.getElementById("newpass").value;
 			var cpass=document.getElementById("cnfpass").value;
@@ -204,8 +203,8 @@
 			}
 			else
 			{
-
-				return true;
+               alert("Please login using your new password")
+  				return true;
 			}
 		}
     </script>

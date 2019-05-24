@@ -222,17 +222,10 @@ def userchangepass(request):
             print(newpass)
             confpass = request.POST.get('cnfpass')
             print(confpass)
-            if newpass != confpass:
-                error = "Your password does not match...."
-                return HttpResponse(error)
-            else:
-                obj1 = Login.objects.filter(emailid=emailid).update(password=newpass)
-                print(obj1)
-                if obj1 == 0:
-                    error = "Enter a valid email id "
-                    return HttpResponse(error)
-                else:
-                    return redirect('/user_home/?email=%s'%emailid)
+
+            obj1 = Login.objects.filter(emailid=emailid).update(password=newpass)
+            print(obj1)
+            return redirect('/login')
         else:
             error = "All fields are required..."
             return HttpResponse(error)
@@ -724,8 +717,9 @@ def user_chathistory(request):
     print(obj1.query)
     for i in range(len(obj1)):
         myobject = obj1[i]
-        print("my",myobject)
+        #print("my",myobject)
         emailid = myobject['receiver']
+        #print("Em = ",emailid)
         obj2 = Login.objects.get(emailid=emailid)
         name = obj2.firstname + " " + obj2.lastname
         mydict.append(name)
@@ -808,6 +802,7 @@ def user_feedback(request):
            try:
                 form =Feedback()
                 form.emailid = useremail
+                form.name = obj1.firstname + obj1.lastname
                 form.profilepic = obj1.profilepic
                 form.comment = request.POST.get('feedback')
                 form.save()
@@ -838,17 +833,10 @@ def expertchangepass(request):
             print(newpass)
             confpass = request.POST.get('cnfpass')
             print(confpass)
-            if newpass != confpass:
-                error = "Your password does not match...."
-                return HttpResponse(error)
-            else:
-                obj1 = Login.objects.filter(emailid=emailid).update(password=newpass)
-                print(obj1)
-                if obj1 == 0:
-                    error = "Enter a valid emailid"
-                    return HttpResponse(error)
-                else:
-                    return redirect('/expert_home/?expertemail=%s'%emailid)
+
+            obj1 = Login.objects.filter(emailid=emailid).update(password=newpass)
+            print(obj1)
+            return redirect('/login')
         else:
             error = "All fields are required..."
             return HttpResponse(error)
@@ -1003,7 +991,7 @@ def get_chat_msg(request):
 def expert_viewreport(request):
     useremail = request.GET.get('sender')
     print("my email = ",useremail)
-    report = Report.objects.filter(emailid = useremail).values().order_by('-date','-time')
+    report = UserAdvise.objects.filter(emailid = useremail).values().order_by('-date','-time')
     print(report)
     name = Login.objects.filter(emailid=useremail).values()
     return render(request, 'expert_viewreport.html', {'userreport' : report, 'name': name})
@@ -1029,17 +1017,10 @@ def adminchangepass(request):
             print(newpass)
             confpass = request.POST.get('cnfpass')
             print(confpass)
-            if newpass != confpass:
-                error = "Your password does not match...."
-                return HttpResponse(error)
-            else:
-                obj1 = Login.objects.filter(emailid=emailid).update(password=newpass)
-                print(obj1)
-                if obj1 == 0:
-                    error = "Enter a valid emailid"
-                    return HttpResponse(error)
-                else:
-                    return redirect('/admin_home/?email=%s'%emailid)
+
+            obj1 = Login.objects.filter(emailid=emailid).update(password=newpass)
+            print(obj1)
+            return redirect('/login')
         else:
             error = "All fields are required..."
             return HttpResponse(error)

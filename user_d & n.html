@@ -38,7 +38,7 @@
     			<div class="col-lg-2 pr-4 align-items-center">
 		    		<a class="navbar-brand" href="/index">Diet<span>Consultant</span></a>
 	    		</div>
-	    		<div class="col-lg-10 d-none d-md-block">
+	    		<!--<div class="col-lg-10 d-none d-md-block">
 		    		<div class="row d-flex">
 			    		<div class="col-md-4 pr-4 d-flex topper align-items-center">
 			    			<div class="icon bg-white mr-2 d-flex justify-content-center align-items-center"><span class="icon-map"></span></div>
@@ -53,7 +53,7 @@
 						    <span class="text">Phone: + 1235 2355 98</span>
 					    </div>
 				    </div>
-			    </div>
+			    </div>-->
 		    </div>
 		  </div>
     </nav>
@@ -69,6 +69,7 @@
             <li class="nav-item"><a href="/user_home/?email={{employee.emailid}}" class="nav-link pl-0">Home</a></li>
             <li class="nav-item active"><a href="/user_dn/?email={{employee.emailid}}" class="nav-link">Diet and Nutrition</a></li>
             <li class="nav-item"><a href="/user_articles/?email={{employee.emailid}}" class="nav-link">Articles</a></li>
+            <li class="nav-item"><a href="/user_feedback/?email={{employee.emailid}}" class="nav-link">Feedback</a></li>
             {% endfor %}
 	        </ul>
 	      </div>
@@ -82,10 +83,10 @@
            {% if reportstatus == 1 %}
                 <li class="nav-item active"><a href="/user_report/" target="_blank"><i class="flaticon-doctor"></i>Previous History</a></li>
             {% else %}
-                <li class="nav-item active"><a href="#"><i class="flaticon-doctor"></i></a></li>
+                <li class="nav-item active"></li>
            {% endif %}
            {% if chatstatus == 1 %}
-                <li class="nav-item active"><a href="/user_preview/" target="_blank"><i class="flaticon-experiment-results"></i>Chat History</a></li>
+                <li class="nav-item active"><a href="/user_chathistory/" target="_blank"><i class="flaticon-experiment-results"></i>Chat History</a></li>
             {% else %}
                 <li class="nav-item active"></li>
            {% endif %}

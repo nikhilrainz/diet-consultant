@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponse,HttpResponseRedirect,redirect,loader,get_object_or_404
+from django.shortcuts import render,render_to_response,HttpResponse,HttpResponseRedirect,redirect,loader,get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.db.models import Q,Max,Count,query,Sum
@@ -45,27 +45,32 @@ def reviews(request):
 "-----------------------Login and Register-------------------------------"
 def user_register(request):
     if request.method == "POST":
-        if request.POST.get('firstname') and request.POST.get('lastname') and request.POST.get('email') and request.POST.get('password') and request.POST.get('confirmpassword'):
+        if request.POST.get('firstname') and request.POST.get('lastname') and request.POST.get('email') and request.POST.get('password') and request.POST.get('confirmpassword') and request.POST.get('security') and request.POST.get('answer'):
             form = Login()
             form.firstname = request.POST.get('firstname')
             form.lastname = request.POST.get('lastname')
             form.emailid = request.POST.get('email')
             form.password = request.POST.get('password')
             cnfpassword = request.POST.get('confirmpassword')
+            form.question = request.POST.get('security')
+            form.answer = request.POST.get('answer')
 
-            obj1 = Login.objects.filter(emailid=form.emailid)
-            if obj1.count() == 0:
-                form.entry = "User"
-                form.save()
-                return redirect('/login')
-            else:
-                form = Login()
-                return render(request, 'user_register.html',{'error' : 'This emailid already exists'})
+            try:
+                obj1 = Login.objects.filter(emailid=form.emailid)
+                if obj1.count() == 0:
+                    form.entry = "User"
+                    form.save()
+                    return redirect('/login')
+                else:
+                    form = Login()
+                    return render(request, 'user_register.html',{'error' : 'This emailid already exists'})
+            except Login.DoesNotExist:
+                pass
         else:
-            messages.warning(request, 'Please fill all the fields to continue...')
-
+            return render(request, 'user_register.html',{'fail': 'Please fill all the fields to continue...'})
     else:
         return render(request, 'user_register.html')
+
 def expert_register(request):
     if request.method == "POST":
         if request.POST.get('firstname') and request.POST.get('lastname') and request.POST.get('emailid') and request.POST.get('password') and request.POST.get('confirmpassword'):
@@ -76,16 +81,19 @@ def expert_register(request):
             form.password = request.POST.get('password')
             cnfpassword = request.POST.get('confirmpassword')
 
-            obj1 = Login.objects.filter(emailid=form.emailid)
-            if obj1.count() == 0:
-                form.entry = "Expert"
-                form.save()
-                return redirect('/login')
-            else:
-                form = Login()
-                return render(request, 'expert_register.html', {'error': 'This emailid already exists'})
+            try:
+                obj1 = Login.objects.filter(emailid=form.emailid)
+                if obj1.count() == 0:
+                    form.entry = "Expert"
+                    form.save()
+                    return redirect('/login')
+                else:
+                    form = Login()
+                    return render(request, 'expert_register.html', {'error': 'This emailid already exists'})
+            except Login.DoesNotExist:
+                pass
         else:
-            messages.warning(request, 'Please fill all the fields to continue...')
+            return render(request, 'user_register.html', {'fail': 'Please fill all the fields to continue...'})
 
     else:
         return render(request, 'expert_register.html')
@@ -125,6 +133,30 @@ def login(request):
     else:
         return render(request, 'Login.html')
 
+def forgotpassword(request):
+    template = loader.get_template('forgotpassword.html')
+    return HttpResponse(template.render())
+@csrf_exempt
+def updatepassword(request):
+    if request.method == "POST":
+        if request.POST.get('email') and request.POST.get('security') and request.POST.get('answer') and request.POST.get('password') and request.POST.get('confirmpassword'):
+            eid = request.POST.get('email')
+            question = request.POST.get('security')
+            ans = request.POST.get('answer')
+            pw  = request.POST.get('password')
+            cnf = request.POST.get('confirmpassword')
+            try:
+                obj1 = Login.objects.get(emailid = eid)
+                print(obj1)
+                if question == obj1.question and ans == obj1.answer:
+                    obj2 = Login.objects.filter(emailid=eid).update(password=pw)
+                    return redirect('/login')
+                else:
+                    return render(request,'forgotpassword.html',{'fail' : 'Security question or answer does not match'})
+            except Login.DoesNotExist:
+                return render(request, 'forgotpassword.html', {'emerror': 'Enter a valid email id'})
+    else:
+        return render_to_response(request,'forgotpassword.html')
 def user_profile(request):
     useremail = request.GET.get('email') # for inputting email id in form
     print("use em = ",useremail )

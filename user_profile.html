@@ -29,6 +29,16 @@
     <!-- Registration Background Css -->    
     <link rel="stylesheet" type="text/css" href="../static/css/util.css">
     <link rel="stylesheet" type="text/css" href="../static/css/main.css">
+    <style type="text/css">
+	.no-spinners {
+		-moz-appearance:textfield;
+	}
+	.no-spinners::-webkit-outer-spin-button,
+	.no-spinners::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+</style>
 </head>
 
 <body>
@@ -87,7 +97,7 @@
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Phone Number</label>
-                                    <input class="input--style-4" type="text" name="phone" pattern="[7-9]{1}[0-9]{9}" title="Phone number with 7-9 and remaing 9 digit with 0-9" required>
+                                    <input class="input--style-4 no-spinners" type="number" name="phone" pattern="[7-9]{1}[0-9]{9}" title="Phone number with 7-9 and remaing 9 digit with 0-9" required>
                                 </div>
                             </div>
                         </div>

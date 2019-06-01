@@ -48,7 +48,6 @@
                                     <label class="label">First Name</label>
                                     <input class="input--style-4" type="text" name="firstname" id="firstname" required pattern="[A-Za-z\s]{3,}" title="Enter Firstname">
                             </div>
-                        
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Last Name</label>
@@ -56,19 +55,18 @@
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="row row-space">
                             <div class="col-2">
                                  <div class="input-group">
                                     <label class="label">Email Id</label>
-                                    <input class="input--style-4" type="email" name="email" id="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Enter Email Id">
+                                    <input class="input--style-4" type="email" name="email" id="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Enter Email Id" style="width:50%;">
                                     <span style="color:red;">{{error}}</span>
                                  </div>
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Password</label>
-                                    <input class="input--style-4" type="password" name="password" id="password" pattern=".{3,}" title="Must contain 3 or more characters">
+                                    <input class="input--style-4" type="password" name="password" id="password" pattern=".{3,}" title="Must contain 3 or more characters" required>
                                 </div>
                             </div>
                         </div>
@@ -80,7 +78,28 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Security Question</label>
+                                    <select name="security" class="input--style-4" required>
+                                        <option value="" selected="selected" disabled="disabled">-- select one --</option>
+                                        <option value="childnickname">What is your nickname?</option>
+                                        <option value="bestfriend">Who is your best friend?</option>
+                                        <option value="birthplace">What is your birth place?</option>
+                                        <option value="car">Name of your car</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Answer</label>
+                                    <input class="input--style-4" type="text" name="answer" id="answer" pattern="[A-Za-z\s]{3,}" title="Enter your answer" required>
+                                </div>
+                            </div>
+                        </div>
                         <p id="result"></p>
+                        <span style="color:red;">{{fail}}</span>
 		                <br><br>
 
                         <div class="p-t-15">

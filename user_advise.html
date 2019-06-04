@@ -29,74 +29,84 @@
     <!-- Registration Background Css -->    
     <link rel="stylesheet" type="text/css" href="../static/css/util.css">
     <link rel="stylesheet" type="text/css" href="../static/css/main.css">
+    <style type="text/css">
+	.no-spinners {
+		-moz-appearance:textfield;
+	}
+	.no-spinners::-webkit-outer-spin-button,
+	.no-spinners::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+</style>
 </head>
 
 <body>
     <div class="limiter"><!-- <div class="page-wrapper bg-gra-02 p-t-130 p-b-100 font-poppins"> -->
-        <div class="container-login100" style="background-image: url({% static '/images/bg-01.jpg' %});">
+        <div class="container-login100" style="background-image: url({% static '/images/health.jpg' %});">
             <div class="wrapper wrapper--w680">
                 <div class="card card-4">
                     <div class="card-body"> 
-                        <h2 class="title">Complete your Health Profile</h2>
+                        <h2 class="title">Complete your Health Profile - {{obj1.firstname}} {{obj1.lastname}}</h2>
                         <form method="POST" class="post-form" action="/user_advise/">
                             {% csrf_token %}
                             <div class="row row-space">
                                 <div class="input-group">
                                     <label class="label">Email Id</label>
-                                    <input class="input--style-4" type="text" name="emailid" placeholder="Email id">
+                                    <input class="input--style-4" type="email" name="emailid" placeholder="Email id" value="{{useremail}}" disabled>
                                 </div>
 
                              </div>
                             <div class="row row-space">
                                 <div class="col-2">
                                      <div class="input-group">
-                                        <label class="label">Height</label>
-                                        <input class="input--style-4" type="text" name="height" placeholder="Height">
+                                        <label class="label">Height[cm]</label>
+                                        <input class="input--style-4 no-spinners" type="number" name="height" placeholder="Height" required>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="input-group">
-                                        <label class="label">Weight</label>
-                                        <input class="input--style-4" type="text" name="weight" placeholder="Weight">
+                                        <label class="label">Weight[kg]</label>
+                                        <input class="input--style-4 no-spinners" type="number" name="weight" placeholder="Weight" required>
                                     </div>
                                 </div>
                             </div>
                             <div class="row row-space">
                                 <div class="col-2">
                                     <div class="input-group">
-                                        <label class="label">HB</label>
-                                        <input class="input--style-4" type="text" name="hb" placeholder="HB">
+                                        <label class="label">HB[g/dl]</label>
+                                        <input class="input--style-4 no-spinners" type="number" name="hb" placeholder="HB" min="10" max="17" required>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="input-group">
-                                        <label class="label">BP</label>
-                                        <input class="input--style-4" type="text" name="systolic" placeholder="Systolic" style="width:40%;">&nbsp/
-                                        <input class="input--style-4" type="text" name="dystolic" placeholder="Dystolic" style="width:40%;">&nbsp
+                                        <label class="label">BP[mmHg]</label>
+                                        <input class="input--style-4 no-spinners" type="number" name="systolic" placeholder="Systolic" min="90" max="250" style="width:40%;" required>&nbsp/
+                                        <input class="input--style-4 no-spinners" type="number" name="dystolic" placeholder="Dystolic" min="60" max="140" style="width:40%;" required>&nbsp
 
                                     </div>
                                 </div>
                             </div>
                             <div class="row row-space">
                                 <div class="input-group">
-                                        <label class="label">Sugar</label>
-                                        <input class="input--style-4" type="text" name="fasting sugar" placeholder="Fasting Sugar" style="width:30%;">&nbsp/
-                                        <input class="input--style-4" type="text" name="after food" placeholder="After Food" style="width:25%;">
+                                        <label class="label">Sugar[mg/dL]</label>
+                                        <input class="input--style-4 no-spinners" type="number" name="fasting sugar" placeholder="Fasting" min="80" max="200" style="width:50%;" required>&nbsp/
+                                        <input class="input--style-4 no-spinners" type="number" name="after food" placeholder="After Food" min="120" max="360" style="width:35%;" required>
                                 </div>
                             </div>
                             <div class="row row-space">
                                 <div class="col-2">
                                     <div class="input-group">
-                                        <label class="label">Cholestrol</label>
-                                        <input class="input--style-4" type="text" name="hdl" placeholder="HDL" style="width:30%;">&nbsp/
-                                        <input class="input--style-4" type="text" name="ldl" placeholder="LDL" style="width:30%;">&nbsp
+                                        <label class="label">Cholestrol[mg/dL]</label>
+                                        <input class="input--style-4 no-spinners" type="number" name="hdl" placeholder="HDL" min="0" max="90" style="width:30%;" required>&nbsp/
+                                        <input class="input--style-4 no-spinners" type="number" name="ldl" placeholder="LDL" min="40" max="200" style="width:30%;" required>&nbsp
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="input-group">
-                                        <label class="label">Tryglycerides/Total Cholestrol</label>
-                                        <input class="input--style-4" type="text" name="try" placeholder="Tryglycerides" style="width:40%;">&nbsp/
-                                        <input class="input--style-4" type="text" name="total" placeholder="Total Cholestrol" style="width:40%;">
+                                        <label class="label">Tryglycerides[mg/dL]/Total Cholestrol[mg/dL]</label>
+                                        <input class="input--style-4 no-spinners" type="number" name="try" placeholder="Tryglycerides" min="40" max="399" style="width:40%;" required>&nbsp/
+                                        <input class="input--style-4 no-spinners" type="number" name="total" placeholder="Total Cholestrol" min="40" max="349" style="width:40%;" required>
                                     </div>
                                 </div>
                             </div>

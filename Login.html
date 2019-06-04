@@ -31,7 +31,7 @@
 <body>
 	
 	<div class="limiter">
-		<div class="container-login100" style="background-image: url({% static '/images/bg-01.jpg' %});">
+		<div class="container-login100" style="background-image: url({% static '/images/Login2.jpg' %});">
 			<div class="wrap-login100">
 				<form method="POST" class="post-form" action="/login/">
 					{% csrf_token %}
@@ -41,6 +41,8 @@
 
 					<span class="login100-form-title p-b-34 p-t-27">
 						Log in
+						<br><br>
+						<h6 style="color: green;">{{success}}</h5>
 					</span>
 
 					<div class="wrap-input100 validate-input" data-validate = "Enter emailaddress">
@@ -56,12 +58,14 @@
 					</div>
 
 					<span style="color:red;">{{error}}</span>
+					<h6 style="color:yellow; float:right;"><a href="/forgotpassword" style="color:yellow;">Forgot Password</a></h6><br><br>
+
 					<div class="container-login100-form-btn">
 						<button class="login100-form-btn">
 							Login
 						</button>
 					</div>
-					
+
 					<div class="text-center">
 						<span class="txt1">
 							New User?

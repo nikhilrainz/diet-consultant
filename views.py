@@ -150,7 +150,7 @@ def updatepassword(request):
                 print(obj1)
                 if question == obj1.question and ans == obj1.answer:
                     obj2 = Login.objects.filter(emailid=eid).update(password=pw)
-                    return redirect('/login')
+                    return render(request,'Login.html',{'success' : 'Password Changed successfully'})
                 else:
                     return render(request,'forgotpassword.html',{'fail' : 'Security question or answer does not match'})
             except Login.DoesNotExist:
@@ -499,7 +499,7 @@ def user_result(request):
         elif Hb < minhb:
             HBSTATUS = "Low"
         else:
-            HBSTATUS = "Not Valid"
+            HBSTATUS = "High"
 
     #Picking fasting sugar range from fasting_sugar
     fasting = FastingSugar.objects.get(fastingmin__lte=Fsugar, fastingmax__gte=Fsugar)
@@ -512,7 +512,8 @@ def user_result(request):
         faststatus = fasting.status
         FastingStatus = faststatus
     else:
-        return HttpResponse('Invalid measurement')
+        FastingStatus = "Immediate medication required"
+
     #Picking after food range from afterfood table
     afterfood = AfterFood.objects.get(aftermin__lte = Affood, aftermax__gte = Affood)
     minafter = int(afterfood.aftermin)
@@ -524,7 +525,7 @@ def user_result(request):
         afterstatus = afterfood.status
         AfterFoodStatus = afterstatus
     else:
-        return HttpResponse('Invalid measurement for After Food')
+        AfterFoodStatus = "Immediate medication required"
 
     #Picking HDL range from HDL Table
     hdl = HDL.objects.get(HDLmin__lte = Hdl, HDLmax__gte = Hdl)
@@ -537,7 +538,7 @@ def user_result(request):
         hdlstatus = hdl.status
         HDLStatus = hdlstatus
     else:
-        return HttpResponse('Invalid measurements for HDL')
+        HDLStatus = "Immediate medication required"
 
     #Picking LDL range from LDL Table
     ldl = LDL.objects.get(LDLmin__lte = Ldl, LDLmax__gte = Ldl)
@@ -550,9 +551,11 @@ def user_result(request):
         ldlstatus = ldl.status
         LDLStatus = ldlstatus
     else:
-        return HttpResponse('Invalid measurements for LDL')
+        LDLStatus = "Immediate medication required"
+
     #Picking Tryglycerides range from Tryglycerides tables
     trygly = Tryglycerides.objects.get(trymin__lte = Tryglyc, trymax__gte = Tryglyc)
+    print("T = ",trygly)
     mintry = int(trygly.trymin)
     print("Min Try = ",mintry)
     maxtry = int(trygly.trymax)
@@ -562,7 +565,8 @@ def user_result(request):
         trystatus = trygly.status
         TryStatus = trystatus
     else:
-        return HttpResponse('Invalid measurements for tryglycerides')
+        TryStatus = "Immediate medication required"
+
     #Picking Total Cholestrol range from Total Cholestrol Tables
     total = TotalCholestrol.objects.get(totalmin__lte = TotalCholes, totalmax__gte = TotalCholes)
     mintotal = int(total.totalmin)
@@ -574,7 +578,8 @@ def user_result(request):
         totalstatus = total.status
         TotalStatus = totalstatus
     else:
-        return HttpResponse('Invalid measurements for total cholestrol')
+        TotalStatus = "Immediate medication required"
+
     #Sedentary, Heart Disease, Breakfast, Lunch, Snacks, Dinner
     if SedentaryPerson == 'Yes':
         SedentaryStatus = "Idle, No Exercise"
@@ -856,7 +861,7 @@ def expert_home(request):
     print(expertprofile)
     return render(request, 'experts_home.html', {'experthomepage': userregister, 'expertprofile': expertprofile})
 
-"******** CHANGE PASSWORD FOR USER ********"
+"******** CHANGE PASSWORD FOR EXPERT ********"
 def expertchangepass(request):
     if request.method == "POST":
         if request.POST.get('newpass') and request.POST.get('cnfpass'):
